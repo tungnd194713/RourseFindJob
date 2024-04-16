@@ -1,0 +1,68 @@
+$font-size-base           : 16;
+$font-size-base-px        : $font-size-base * 1px;
+$font-size-base-narrow    : $font-size-base - 2;
+$font-size-base-narrow-px : $font-size-base-narrow * 1px;
+
+$leading-base             : 1.4;
+$line-height-base         : round($font-size-base * $leading-base); // 20 * 1.4
+$baseline                 : $line-height-base * 1px;
+
+$type: (
+	micro                   : $font-size-base - 8,
+	small                   : $font-size-base - 4, // h5, h6
+	base                    : $font-size-base,  // p, h4
+	mid                     : ($font-size-base + 2),  // h3
+	large                   : ($font-size-base + 8),  // h2
+	jumbo                   : ($font-size-base + 16)  // h1
+);
+
+// Useful to set here when bold webfonts come as 400 font-weight.
+$font-weight-bold         : bold;
+
+// Font stacks
+$font-family-system       : "", sans-serif;
+$font-family-sans         : "Helvetica Neue", Helvetica, Arial, sans-serif;
+$font-family-serif        : Georgia, "Times New Roman", Times, serif;
+$font-family-mono         : Menlo, Monaco, "Courier New", monospace;
+
+$font-family-base         : $font-family-system;
+$font-family-alt          : $font-family-serif;
+
+$font-family-headings     : $font-family-base; // using inherit will use $font-family-base for all headings
+$font-weight-headings     : bold;    // instead of browser default, bold
+$line-height-headings     : 1.1;
+
+
+$screen-xs-min: 0;
+$screen-sm-min: 576px;
+$screen-md-min: 768px;
+$screen-lg-min: 992px;
+$screen-xl-min: 1200px;
+$screen-xxl-min: 1400px;
+
+$container-xs: 100%;
+$container-sm: 540px;
+$container-md: 720px;
+$container-lg: 960px;
+/**
+ * Grid
+ * =================================
+ * These variables will control the grid module.
+ *
+ * if your project doesnt use Kickoff’s default grid, you can delete these
+ */
+
+$grid-column-count        : 12; // Total column count
+$grid-gutter-width        : 20px; // [in pixels]
+
+/**
+ * App-specific variables
+ * =================================
+ */
+$default-transition-timing   : cubic-bezier(0.77, 0, 0.175, 1);
+$default-transition-duration : 300ms;
+$default-transition          : all $default-transition-duration $default-transition-timing;
+
+$color-text: #333333;
+
+$hr-color: #dddddd;

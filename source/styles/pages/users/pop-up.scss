@@ -1,0 +1,95 @@
+.poupDone{
+    width: 800px;
+    height:500px;
+    border-radius: 30px;
+    background-color: #FFFFFF;
+    position: relative;
+    margin: auto;
+}
+.delete {
+    width: 30px;
+    height: 30px;
+    border: 1px solid #707070;
+    border-radius: 15px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    cursor: pointer;
+}
+.img_done {
+    margin: auto;
+    width: 160px;
+    margin-top: 80px;
+    margin-bottom: 47px;
+}
+
+h3 {
+    font-size: 28px;
+    font-weight: bold;
+    color: #31736A;
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+p {
+    font-size: 16px;
+    color: #333333;
+    text-align: center;
+}
+@media(max-width:768px){
+
+p {
+    font-size: 15px;
+}
+
+.poupDone {
+    width: 95vw;
+}
+}
+@media (max-width:577px) {
+    .modal-content{
+        .CV, .get-name{
+            flex-direction: column !important;
+
+        }
+        .get-name{
+            padding: 0 10.5px;
+        }
+        .label-form-group{
+            padding-left: 0;
+        }
+        .label-form-group .label-form-cv{
+            padding-left: 10.5px;
+        }
+        .form-cv{
+            padding-left: 10px !important;
+        }
+        .form-cv,
+        .input-name{
+            align-self: center;
+        }
+        .form-cvUpload{
+            margin-top: 8px !important;
+        }
+    }
+}
+
+@media (max-width:321px) {
+    .modal-content{
+        .modal-content .title{
+            margin-top: 48px !important;
+        }
+        .modal-content .title h3{
+            margin-bottom: 10px !important;
+        }
+    }
+}
+@media (max-width:320px) {
+    p{
+        font-size: 13px;
+    }
+}
+

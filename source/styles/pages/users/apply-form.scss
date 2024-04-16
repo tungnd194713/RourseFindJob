@@ -1,0 +1,203 @@
+.modal-content {
+    border-radius: 30px;
+}
+
+.title {
+    margin-top: 26px;
+}
+
+.title h3 {
+    font-size: 32px;
+    font-weight: bold;
+    color: #333333;
+    text-align: center;
+    height: 39px;
+    margin-bottom: 32.1px;
+}
+
+.title p {
+    font-size: 16px;
+    font-weight: bold;
+    text-transform: uppercase;
+    width: 368px;
+    margin: auto;
+    text-align: center;
+    color: #333333;
+    height: auto;
+    -webkit-line-clamp: 2;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    line-height: inherit;
+}
+.delete {
+    width: 30px;
+    height: 30px;
+    border: 1px solid #707070;
+    border-radius: 15px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    cursor: pointer;
+}
+
+.get-name {
+    padding-top: 25px;
+}
+
+.get-name h5 {
+    font-size: 14px;
+    color: #4D4D4D;
+}
+
+.get-name input {
+    border-radius: 5px;
+    max-width: 600px;
+    height: 40px;
+    border: 1px solid #CCCCCC;
+}
+
+.CV {
+    padding-top: 15px;
+}
+
+.CV h5 {
+    font-size: 14px;
+    color: #4D4D4D;
+}
+
+label {
+    font-size: 14px;
+    color: #4D4D4D;
+    margin-left: 15.5px;
+}
+
+.get-message {
+    padding-top: 35px;
+    padding-left: 33px;
+}
+
+.get-message h5 {
+    font-size: 14px;
+    color: #4D4D4D;
+}
+
+.get-message textarea {
+    max-width: 703px;
+    border: 1px solid #CCCCCC;
+    border-radius: 5px;
+}
+
+.get-message p {
+    font-size: 10px;
+    color: #4D4D4D;
+    padding-right: 63px;
+}
+.apply{
+    padding-bottom: 30px;
+    padding-top: 20px;
+}
+.apply button {
+    border-radius: 20px;
+    background-color: #BC282D!important;
+    border: none;
+    color: #FFFFFF;
+    font-size: 16px;
+}
+
+.apply button:hover {
+    background-color: #BC282D!important;
+    box-shadow: none!important;
+}
+
+.apply button:focus {
+    box-shadow: none;
+}
+
+.error {
+    display: block;
+}
+
+ button.recruitment {
+  width: 100%;
+  height: 40px;
+  background-color: #BC282D;
+  color: #fff;
+  font-size: 16px;
+  font-weight: bold;
+  border-radius: 10px;
+  border: none;
+  margin-bottom: 14px;
+}
+
+.applied-button {
+  width: 100%;
+  height: 40px;
+  background-color: #F2F2F2;
+  color: #999999;
+  font-size: 16px;
+  font-weight: bold;
+  border-radius: 10px;
+  border: none;
+  margin-bottom: 38px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  user-select: none;
+  white-space: nowrap;
+}
+
+.recruitment:hover {
+  background-color: #ee696eeb;
+}
+.createCV{
+    margin-top: 5px !important;
+}
+.label-form-group{
+    white-space: nowrap;
+}
+@media (max-width:320px) {
+
+label {
+    font-size: 12px;
+}
+
+.title h3 {
+    font-size: 25px !important;
+}
+
+}
+@media (max-width:767px){
+
+
+
+.chooseType {
+    margin-left: 20px;
+}
+
+.title{
+    margin-top: 40px !important;
+}
+
+.title p {
+    width: 95vw;
+}
+
+.title h3 {
+    font-size: 28px;
+}
+
+
+}
+@media (min-width:768px) and (max-width:1400px) {
+
+
+
+}
+
+.max-width-95-percent {
+  max-width: 95% !important;
+}

@@ -1,0 +1,392 @@
+* {
+  //font-family: 'Montserrat' !important;
+  font-family: "M PLUS 1p", serif;
+}
+
+body {
+  //font-family: 'Montserrat' !important;
+  font-family: "M PLUS 1p", serif;
+  background-color: #f2f2f2 !important;
+  background-image: none;
+}
+
+a {
+  text-decoration: none;
+  color: #000000;
+}
+
+.card {
+  box-shadow: 0px 4px 3px 0px rgba(0,0,0,0.1);
+  padding: 30px 50px 50px;
+  border-radius: 15px;
+  margin-bottom: 20px;
+}
+
+.card:not(:first-child) {
+  padding: 50px;
+}
+
+#btn-edit {
+  position: absolute;
+  top: 20px;
+  right: 30px;
+}
+
+.loader {
+  margin: 20px auto;
+  border: 8px solid #f3f3f3;
+  border-radius: 50%;
+  border-top: 8px solid #3B5998;
+  border-bottom: 8px solid #3B5998;
+  width: 60px;
+  height: 60px;
+  -webkit-animation: spin 1.2s linear infinite;
+  animation: spin 1.2s linear infinite;
+}
+@-webkit-keyframes spin {
+  0% {
+    -webkit-transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(360deg);
+  }
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.basic .logo {
+  width: 200px;
+  height: 200px;
+  border-radius: 40px;
+  padding: 50%;
+}
+
+.basic .logo img {
+  transform: translate(-50%, -50%);
+  width: inherit;
+  height: inherit;
+  border-radius: 40px;
+  object-fit: contain;
+}
+
+.basic #name {
+  font-size: 32px;
+  font-weight: bold;
+  margin-bottom: 32px;
+}
+
+.basic .item {
+  margin-bottom: 12px;
+}
+
+h2.title {
+  font-size: 28px;
+  font-weight: bolder;
+}
+
+small {
+  font-weight: bolder;
+}
+
+.profile-img {
+  border-radius: 20px;
+  height: 30rem;
+}
+
+.map iframe {
+  border-radius: 20px;
+  border: 0;
+  width: 100%;
+  min-height: 380px;
+  background-color: darkgray;
+}
+
+.img-group {
+  margin-bottom: 100px;
+}
+
+.job-list {
+  display: flex;
+  margin-bottom: 33px;
+}
+
+.job-text {
+  font-weight: bold;
+  font-size: 28px;
+}
+
+.more {
+  flex-grow: 1;
+  text-align: end;
+  border-bottom: 2px solid #E4E4E4;
+  margin-left: 15px;
+  margin-bottom: 10px;
+  font-weight: bold;
+  display: flex;
+  justify-content: flex-end;
+  cursor: pointer;
+}
+
+.more > a {
+  text-decoration: none;
+  color: #808080;
+  font-size: 12px;
+}
+
+.job-img {
+  position: relative;
+}
+
+.job-img > img:first-of-type {
+  position: absolute;
+  top: 7%;
+  right: 5%;
+  cursor: pointer;
+}
+
+.job-img > img:last-of-type {
+  width: 330px;
+  border-radius: 20px;
+  height: 220px;
+}
+
+.basic #sub {
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 26px;
+  //cursor: pointer;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+  //height: 46px;
+  line-height: 24px;
+  text-transform: uppercase;
+}
+
+.basic #sub a:hover {
+  color: #707070 !important;
+}
+
+.basic .jd {
+  margin-bottom: 5px;
+  font-size: 14px;
+}
+
+.moneys,
+.maps,
+.time{
+    white-space: nowrap;
+}
+
+.job-descr {
+  width: 500px;
+}
+
+.jr-con {
+  //margin-top: 10px;
+  display: flex;
+  flex-wrap: wrap !important;
+  white-space: nowrap;
+}
+
+.jr {
+  font-size: 10px;
+  font-weight: bold;
+  padding: 5px 8px;
+  background-color: #FF8185;
+  color: #FFFFFF;
+  border-radius: 6px;
+  margin-right: 10px;
+  user-select: none;
+  margin-top: 10px;
+  height: 22px;
+  display: inline-flex;
+  align-items: center;
+}
+
+.break {
+  border-right: 1px solid #FF8185;
+  margin-right: 10px;
+  margin-top: 10px;
+  //margin-bottom: 10px;
+}
+
+.jd:first-of-type > span:last-of-type {
+  font-weight: bold;
+}
+
+.gray-border {
+  border-top: 1px solid #E4E4E4;
+  margin-top: 4px;
+}
+
+.gray-bborder {
+  border-bottom: 1px solid #E4E4E4;
+  margin-bottom: 4px;
+}
+
+.gray-padding {
+  padding-top: 20px;
+}
+
+.pag {
+  margin: 30px 0;
+}
+
+.swiper-slide {
+  height: unset !important;
+  max-height: 413px !important;
+}
+
+.swiper-slide img {
+  width: 100%;
+  height: 277px;
+  border-radius: 20px;
+}
+
+.swiper-button-prev {
+  color: darkgray
+}
+
+.swiper-button-next {
+  color: darkgray
+}
+
+@media (max-width: 1199.98px) {
+  .basic .logo {
+    width: 150px;
+    height: 150px;
+    border-radius: 30px;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .basic .logo img {
+    transform: translate(0, 0);
+    border-radius: 30px;
+  }
+}
+
+@media only screen and (max-width: 991.98px) {
+  .card {
+    font-size: 14px;
+  }
+  h2, .basic #name, h2.title {
+    font-size: 28px;
+  }
+  .gray-bborder {
+    border: none;
+  }
+  .mo-mar {
+    margin-bottom: 32px;
+  }
+}
+
+@media only screen and (max-width: 767.98px) {
+  .job-img > img:last-of-type {
+    width: 100%;
+  }
+
+  .job-img > img:first-of-type {
+    //right: 35%;
+  }
+  .card, .card:not(:first-child) {
+    font-size: 12px;
+    padding: 15px;
+  }
+  h2, .basic #name, h2.title {
+    font-size: 24px;
+  }
+}
+
+@media only screen and (max-width: 500px) {
+  .job-img > img:first-of-type {
+    //right: 26%;
+  }
+}
+
+@media only screen and (max-width: 320px) {
+  .job-img > img:last-of-type {
+    max-width: 100%;
+    border-radius: 20px;
+    height: 165px;
+  }
+}
+
+.fs-14 {
+  font-size: 14px;
+}
+
+.statusToggle {
+  cursor: pointer;
+  font-size: 12px;
+  color: rgba(0, 0, 0, .5);
+  display: inline-flex;
+  align-items: center;
+}
+
+.show-more {
+  text-align: end;
+  color: #be272d;
+  margin-top: 10px;
+  cursor: pointer;
+  font-style: italic;
+  font-size: 16px;
+}
+
+.show-more:hover {
+  opacity: .7;
+}
+
+.mini-text {
+  font-size: 12px;
+  color: rgba(0, 0, 0, .8);
+  cursor: pointer;
+  border: 1px solid rgba(0, 0, 0, .5);
+  background: rgba(0, 0, 0, .2);
+  border-radius: 15px;
+  margin-top: 10px;
+  border: none;
+  align-items: center;
+  font-weight: bold;
+  display: inline-flex;
+  padding: 2px 3px 3px 10px;
+  white-space: nowrap;
+
+}
+
+.mini-text img {
+  width: 18px;
+  vertical-align: sub;
+  margin-left: 5px;
+}
+
+.mini-text:hover {
+  color: #707070 !important;
+  background: rgb(105 105 105 / 20%) !important;
+}
+
+.job-list-contain {
+  .job-item {
+    padding: 20px 0;
+    border-top: 1px solid #e6e6e6;
+  }
+
+  .job-item-first {
+    padding-top: 0 !important;
+    border-top: none !important;
+  }
+}
+
+.website-link:hover {
+  color: #0492e4e0 !important;
+}

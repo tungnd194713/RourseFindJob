@@ -1,0 +1,63 @@
+{
+  "name": "vn_find_jobs-frontend",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "nuxt",
+    "build": "nuxt build",
+    "start": "nuxt start",
+    "generate": "nuxt generate",
+    "lint:js": "eslint --ext \".js,.vue\" --ignore-path .gitignore .",
+    "lint:style": "stylelint \"**/*.{vue,css}\" --ignore-path .gitignore",
+    "lint": "npm run lint:js && npm run lint:style"
+  },
+  "lint-staged": {
+    "*.{js,vue}": "eslint",
+    "*.{css,vue}": "stylelint"
+  },
+  "dependencies": {
+    "@nuxtjs/auth": "^4.9.1",
+    "@nuxtjs/axios": "^5.13.6",
+    "@nuxtjs/dotenv": "^1.4.1",
+    "@nuxtjs/i18n": "^7.1.0",
+    "@nuxtjs/moment": "^1.6.1",
+    "@nuxtjs/toast": "^3.3.1",
+    "bootstrap": "^5.1.3",
+    "core-js": "^3.15.1",
+    "element-ui": "^2.15.14",
+    "jp-postalcode-lookup": "0.0.2",
+    "nanoid": "^2.1.11",
+    "nuxt": "^2.15.7",
+    "nuxt-sass-resources-loader": "^2.0.5",
+    "swiper": "^7.3.2",
+    "v-runtime-template": "^1.10.0",
+    "vee-validate": "^3.4.13",
+    "vue": "^2.6.14",
+    "vue-awesome-swiper": "^4.1.1",
+    "vue-fb-customer-chat": "^0.2.0",
+    "vuelidate": "^0.7.6",
+    "vuex-router-sync": "^5.0.0",
+    "wanakana": "^4.0.2"
+  },
+  "devDependencies": {
+    "@babel/eslint-parser": "^7.14.7",
+    "@commitlint/cli": "^12.1.4",
+    "@commitlint/config-conventional": "^12.1.4",
+    "@nuxtjs/eslint-config": "^6.0.1",
+    "@nuxtjs/eslint-module": "^3.0.2",
+    "@nuxtjs/style-resources": "^1.2.1",
+    "@nuxtjs/stylelint-module": "^4.0.0",
+    "eslint": "^7.29.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-nuxt": "^2.0.0",
+    "eslint-plugin-vue": "^7.12.1",
+    "husky": "^6.0.0",
+    "lint-staged": "^10.5.4",
+    "prettier": "^2.3.2",
+    "sass": "^1.43.4",
+    "sass-loader": "^10.2.0",
+    "stylelint": "^13.13.1",
+    "stylelint-config-prettier": "^8.0.2",
+    "stylelint-config-standard": "^22.0.0"
+  }
+}

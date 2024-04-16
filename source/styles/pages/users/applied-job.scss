@@ -1,0 +1,270 @@
+body {
+    font-family: 'Montserrat';
+    background-color: #f2f2f2 !important;
+    background-image: none;
+}
+
+.card {
+    padding: 44px 100px 60px;
+    border-radius: 13px;
+    //margin-bottom: 80px;
+    min-height: 35rem;
+    box-shadow: 0px 4px 3px 0px rgb(0 0 0 / 10%);
+    border: none;
+}
+
+.card:not(:first-child) {
+    padding: 50px;
+}
+
+h2.title {
+    font-size: 28px;
+    font-weight: bolder;
+}
+
+.job-list {
+    display: flex;
+    margin-bottom: 3.2px;
+}
+
+.job-text {
+    font-weight: bold;
+    font-size: 28px;
+}
+
+.display_all_jobs{
+    white-space: nowrap;
+    margin-left: 5px;
+}
+.moneys,
+.maps,
+.time{
+    white-space: nowrap;
+}
+.job-img {
+    position: relative;
+    width: 330px;
+    height: 220px;
+}
+
+.job-img>.the-img {
+    width: inherit;
+    height: inherit;
+    cursor: pointer;
+}
+
+.job-img>img:first-of-type {
+    position: absolute;
+    top: 7%;
+    right: 5%;
+    cursor: pointer;
+}
+
+.job-img>img:last-of-type {
+    border-radius: 20px;
+}
+
+.basic #sub {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 0;
+    //cursor: pointer;
+    //height: 50px;
+    line-height: 28px;
+}
+
+.basic #sub a:hover {
+    color: #707070 !important;
+}
+
+.basic .jd {
+    margin-bottom: 5px;
+    font-size: 14px;
+}
+
+.jr-con {
+    //margin-top: 10px;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.jr {
+    font-size: 10px;
+    font-weight: bold;
+    padding: 5px 8px;
+    background-color: #FF8185;
+    color: #FFFFFF;
+    border-radius: 6px;
+    margin-right: 10px;
+    user-select: none;
+    margin-top: 10px;
+    white-space: nowrap;
+}
+
+.break {
+    border-right: 1px solid #EE8787;
+    margin-right: 10px;
+    margin-top: 10px;
+    margin-bottom: 1px;
+}
+
+.jd:first-of-type>span:last-of-type {
+    font-weight: bold;
+}
+
+.more {
+    flex-grow: 1;
+    text-align: end;
+    border-bottom: 1px solid #E4E4E4;
+    margin-left: 15px;
+    margin-bottom: 10px;
+    font-weight: bold;
+}
+
+@media (max-width: 1199.98px) {}
+
+@media only screen and (max-width: 991.98px) {
+    .card {
+        font-size: 14px;
+    }
+    h2,
+    .basic #name,
+    h2.title {
+        font-size: 28px;
+    }
+    .gray-border {
+        border: none;
+    }
+    .mo-mar {
+        margin-bottom: 32px;
+    }
+}
+
+@media (min-width: 768px) and (max-width: 991.98px) {
+    .job-img-contain {
+        width: 50%;
+    }
+    .job-content-contain {
+        width: 50%;
+    }
+    .job-img {
+        width: 100%;
+    }
+    .job-img>img:last-of-type {
+        width: 100%;
+        height: 170px;
+    }
+}
+
+@media only screen and (max-width: 767.98px) {
+    .job-img {
+        width: 100%;
+    }
+    .frame {
+        max-width: 100% !important;
+    }
+    .job-img>img:first-of-type {
+        right: 5%;
+    }
+    .card,
+    .card:not(:first-child) {
+        font-size: 12px;
+        padding: 15px;
+    }
+    h2,
+    .basic #name,
+    h2.title {
+        font-size: 24px;
+    }
+}
+
+@media only screen and (max-width: 470px) {
+    .job-img>img:first-of-type {
+        right: 4%;
+    }
+}
+
+@media only screen and (max-width: 380px) {
+    .job-img>img:first-of-type {
+        //right: 24%;
+    }
+    .job-img>img:last-of-type {
+        //max-width: 266px;
+        width: 100%;
+        border-radius: 20px;
+    }
+}
+
+@media only screen and (max-width: 340px) {
+    .job-img>img:first-of-type {
+        //right: 30%;
+        width: 10%;
+    }
+}
+
+.line-frame {
+    max-width: 414px;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    overflow: hidden;
+}
+
+.frame {
+    max-width: 414px;
+    margin-bottom: 8px;
+}
+
+h2 {
+    text-transform: uppercase;
+}
+
+.more-show {
+    cursor: pointer;
+    font-size: 12px;
+    background: rgba(0, 0, 0, .2);
+    display: inline-flex;
+    height: 100%;
+    padding: 3px 3px 3px 10px;
+    border-radius: 15px;
+    font-weight: bold;
+    margin-top: 10px;
+    white-space: nowrap;
+}
+
+.more-show img {
+    width: 18px;
+    height: 18px;
+    margin-left: 5px;
+}
+
+.more-show:hover {
+    color: #707070 !important;
+    background: rgba(105, 105, 105, 0.2) !important;
+}
+
+.no-fav {
+    font-size: 20px;
+    color: rgba(0, 0, 0, .5);
+    padding: 10px 0;
+}
+
+.item-con {
+    position: relative;
+    padding: 20px 0;
+    border-bottom: 1px solid #e6e6e6;
+}
+
+.non-exist {
+    position: absolute !important;
+    padding: 2px 10px;
+    background-color: rgba(255, 0, 0, 1);
+    z-index: 100;
+    font-weight: bold;
+    border-radius: 10px 0 10px 0;
+    //margin-top: 1rem
+}
+
+.green-check-box {
+    margin-left: 20px;
+}

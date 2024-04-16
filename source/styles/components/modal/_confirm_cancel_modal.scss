@@ -1,0 +1,35 @@
+.box-modal {
+  border-radius: 15px;
+}
+
+.close-modal {
+  height: 30px;
+  cursor: pointer;
+}
+
+.modal-header {
+  justify-content: flex-end;
+}
+
+.modal-body > h3 > img {
+  height: 200px;
+}
+
+.btn-secondary-custom {
+  color: #fff;
+  background-color: #c9c9c9;
+  border-color: #c9c9c9;
+}
+
+.modal-body-text {
+  color: #076dad;
+}
+
+.modal-footer {
+  border-top: none !important;
+}
+
+.btn-p {
+  padding-right: 1.8rem !important;
+  padding-left: 1.8rem !important;
+}

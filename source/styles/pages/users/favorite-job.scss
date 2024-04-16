@@ -1,0 +1,241 @@
+body {
+    font-family: 'Montserrat';
+    background-color: #f2f2f2 !important;
+    background-image: none;
+}
+
+.card {
+    padding: 44px 20px 60px;
+    border-radius: 13px;
+    //margin-bottom: 80px;
+    min-height: 35rem;
+    box-shadow: 0 4px 3px 0 rgba(0, 0, 0, 10%);
+    border: none;
+}
+
+.card:not(:first-child) {
+    padding: 50px;
+}
+
+.job-list {
+    display: flex;
+    margin-bottom: 3.2px;
+}
+
+.job-text {
+    font-weight: bold;
+    font-size: 28px;
+}
+
+.job-img {
+    position: relative;
+}
+
+.job-img>.the-img {
+    max-height: 220px;
+    min-height: 220px;
+    cursor: pointer;
+}
+
+.job-img>img:first-of-type {
+    position: absolute;
+    top: 7%;
+    right: 5%;
+    cursor: pointer;
+    z-index: 99;
+}
+
+.job-img>img:last-of-type {
+    width: 255px;
+    border-radius: 20px;
+}
+
+.moneys,
+.maps,
+.time{
+    white-space: nowrap;
+}
+
+.basic #sub {
+    font-size: 14px;
+    font-weight: bold;
+    margin-bottom: 0;
+    //cursor: pointer;
+    //height: 38px;
+    line-height: 19px;
+}
+
+.basic #sub a:hover {
+    color: #707070 !important;
+}
+
+.basic .jd {
+    margin-bottom: 5px;
+    font-size: 14px;
+}
+
+.job-descr {
+    width: 500px;
+}
+
+.jd:first-of-type>span:last-of-type {
+    font-weight: bold;
+}
+
+.gray-border {
+    //border-top: 1px solid #E4E4E4;
+    //margin-top: 4px;
+}
+
+.gray-border {
+    border-bottom: 1px solid #E4E4E4;
+    //margin-bottom: 4px;
+}
+
+.last-job-item {
+    border-bottom: none !important;
+}
+
+.gray-padding {
+    padding-top: 20px;
+}
+
+.pag {
+    margin: 30px 0;
+}
+
+.more {
+    flex-grow: 1;
+    text-align: end;
+    border-bottom: 1px solid #E4E4E4;
+    margin-left: 15px;
+    margin-bottom: 10px;
+    font-weight: bold;
+}
+
+@media (max-width: 1199.98px) {}
+
+@media only screen and (max-width: 991.98px) {
+    .card {
+        font-size: 14px;
+    }
+    h2,
+    .basic #name,
+    h2.title {
+        font-size: 28px;
+    }
+    .gray-border {
+        border: none;
+    }
+    .mo-mar {
+        margin-bottom: 32px;
+    }
+}
+
+@media only screen and (max-width: 767.98px) {
+    .job-img {
+        width: 100%;
+    }
+    .job-img>img:last-of-type {
+        width: 100%;
+    }
+    .frame {
+        max-width: 100% !important;
+    }
+    .card,
+    .card:not(:first-child) {
+        font-size: 12px;
+        padding: 15px;
+    }
+    h2,
+    .basic #name,
+    h2.title {
+        font-size: 24px;
+    }
+}
+
+@media only screen and (max-width: 470px) {
+    .job-img {
+        //width: 255px
+        width: 100%;
+    }
+}
+
+@media only screen and (max-width: 380px) {
+    .job-img {
+        //width: 255px
+        width: 100%;
+    }
+    .job-img>img:last-of-type {
+        //max-width: 266px;
+        width: 100%;
+        border-radius: 20px;
+    }
+}
+
+@media only screen and (max-width: 340px) {
+    .job-img {
+        //width: 255px
+        width: 100%;
+    }
+}
+
+.no-fav {
+    font-size: 20px;
+    color: rgba(0, 0, 0, .5);
+}
+
+.line-frame {
+    max-width: 350px;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    overflow: hidden;
+}
+
+.frame {
+    max-width: 350px;
+    margin-bottom: 26px;
+}
+
+h2 {
+    text-transform: uppercase;
+}
+
+.item-con {
+    position: relative;
+    padding: 20px 0;
+    border-bottom: 1px solid #e6e6e6;
+}
+
+.non-exist {
+    position: absolute !important;
+    padding: 2px 10px;
+    background-color: rgba(255, 0, 0, 1);
+    z-index: 100;
+    position: relative;
+    font-weight: bold;
+    border-radius: 10px 0 10px 0;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+.loader {
+    margin: 20px auto;
+    border: 8px solid #f3f3f3;
+    border-radius: 50%;
+    border-top: 8px solid #3B5998;
+    border-bottom: 8px solid #3B5998;
+    width: 60px;
+    height: 60px;
+    -webkit-animation: spin 1.2s linear infinite;
+    animation: spin 1.2s linear infinite;
+    z-index: 999999;
+}

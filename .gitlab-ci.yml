@@ -1,0 +1,37 @@
+stages:
+  - test
+  - deploy
+
+style-check:
+  image: node:14.18.1-alpine
+  stage: test
+  script:
+    - cd ./source && npm install && npm run lint
+  cache: 
+    key: $CI_COMMIT_REF_SLUG-$CI_PROJECT_DIR
+    paths:
+      - ./source/node_modules/
+  allow_failure: false
+  only:
+    - package-lock.json
+    - merge_requests
+    - pushes
+
+deploy_dev:
+  image: alpine:3.15.0
+  stage: deploy
+  script:
+    - mkdir -p ~/.ssh
+    - echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config
+
+    # Cài openssh để dùng được sshpass
+    - apk add --no-cache --update bash openssh rsync sshpass
+    - sshpass -V
+
+    # - eval $(ssh-agent -s)
+    - export SSHPASS=$DEV_SSH_PASS
+
+    # Pull code
+    - sshpass -e ssh -t $DEV_SERVER_USER@$DEV_SERVER "cd $DEV_PATH && git pull && docker-compose up -d --build"
+  only:
+    - develop

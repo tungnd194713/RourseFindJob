@@ -1,0 +1,48 @@
+.box-modal {
+  border-radius: 15px;
+}
+
+.close-modal {
+  height: 30px;
+  cursor: pointer;
+}
+
+.modal-header {
+  justify-content: flex-end;
+}
+
+.modal-body {
+  padding: 2rem;
+}
+
+.modal-body > h3 > img {
+  height: 160px;
+}
+
+.modal-body-text {
+  color: #31736a;
+}
+
+h3, h6, p {
+  font-family: inherit;
+}
+
+.link-to-profile-page {
+  cursor: pointer;
+  color: red;
+}
+
+.link-to-profile-page:hover {
+  text-decoration-line: underline;
+}
+
+.modal-footer {
+  border-top: none !important;
+  p {
+    font-size: 12px;
+    margin: 0;
+  }
+  .red-text {
+    color: red;
+  }
+}

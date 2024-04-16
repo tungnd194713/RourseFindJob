@@ -1,0 +1,92 @@
+footer {
+  width: 100%;
+  background-image: url("~/assets/images/users/bg-footer.jpg");
+  background-size: cover;
+  background-position: bottom;
+  background-repeat: no-repeat;
+}
+
+.user-footer {
+  background-color: #990200;
+}
+
+.user-footer .container {
+  padding-top: 80px;
+  padding-bottom: 50px;
+}
+
+.user-footer .footer-logo {
+  height: 58px;
+}
+
+.user-footer img {
+  height: 50px;
+}
+
+.user-footer h5 {
+  font-size: 18px;
+  color: #F2B569!important;
+}
+
+.user-footer .line-title {
+  //border-bottom: 2px solid #F2B569;
+  //max-width: 30%;
+  width: 60px;
+  height: 3px;
+  background-color: #F2B569;
+  border-radius: 1.5px;
+}
+
+.user-footer ul li a {
+  font-size: 14px;
+  color: #ffffff;
+}
+
+.user-footer ul li a:visited {
+  color: #ffffff;
+}
+
+.user-footer ul li a:hover {
+  color: #f2b569
+}
+
+.user-footer .footer-icon-social {
+  color: #82b0ca;
+  /*font-size: 30px;*/
+}
+
+.footer-copyright {
+  color: #ffffff;
+  font-size: 14px;
+  background-color: #990200;
+  padding: 12px;
+  white-space: nowrap;
+}
+
+.user-footer a.nuxt-link-exact-active {
+  color: #F2B569 !important;
+}
+
+::-webkit-scrollbar {
+  height: 5px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgb(180, 180, 180);
+}
+::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 5px grey;
+  border-radius: 2px;
+  height: 5px;
+}
+
+@media only screen and (max-width: 600px) {
+  .user-footer .footer-logo {
+    height: 50px;
+  }
+
+  .user-footer .container {
+    padding-top: 40px;
+    padding-bottom: 25px;
+  }
+}

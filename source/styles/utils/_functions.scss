@@ -1,0 +1,17 @@
+@function  get-font-size($type) {
+    $fontSize: 14;
+    @if ($type == small) {
+        $fontSize: 12;
+    }
+    @if ($type == base) {
+        $fontSize: 14;
+    }
+    @if ($type == mid) {
+        $fontSize: 18;
+    }
+
+    @if ($type == large) {
+        $fontSize: 24;
+    }
+    @return $fontSize;
+}
