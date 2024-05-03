@@ -37,6 +37,8 @@ export default {
   css: [
     '~/styles/style.scss',
     'element-ui/lib/theme-chalk/index.css',
+    'video.js/dist/video-js.css',
+    'videojs-markers/dist/videojs.markers.css',
   ],
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins

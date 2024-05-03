@@ -1,0 +1,6 @@
+{
+  "devDependencies": {
+    "video.js": "^8.10.0",
+    "videojs-markers": "^1.0.1"
+  }
+}

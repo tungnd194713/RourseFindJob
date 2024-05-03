@@ -1076,7 +1076,6 @@ export default {
     margin-bottom: 0;
   }
   button {
-      border-radius: 20px !important;
       background-color: white !important;
       color: #00756A !important;
       font-size: 20px !important;
@@ -1090,7 +1089,6 @@ export default {
       background-color: #F1F1F1;
       color: #606060;
       font-size: 16px;
-      border-radius: 20px;
       width: 100%;
       margin-left: auto;
       margin-right: auto;
@@ -1126,7 +1124,6 @@ export default {
     margin-top: 1.5rem;
     border: 2px solid rgba(0, 0, 0, 0.125);
     padding: 0 !important;
-    border-radius: 20px;
     border-top: none;
     background-color: #F1F1F1;
   }

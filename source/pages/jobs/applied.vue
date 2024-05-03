@@ -147,7 +147,10 @@
               </div> -->
               <div>Trạng thái: {{ jobStatus[item.status - 1] }}</div>
               <div v-if="item.status === 3">
-                <el-button type="primary">Bắt đầu đào tạo</el-button>
+                <el-button type="primary" @click="startEducation(item)">Bắt đầu đào tạo</el-button>
+              </div>
+              <div v-else-if="item.status === 4">
+                <el-button type="warning" @click="$router.push(localePath(`/educations`))">Đang đào tạo - 70%</el-button>
               </div>
             </div>
           </div>
@@ -235,6 +238,13 @@ export default {
       this.pageCount = data.totalPages
       for (let i = 0; i < data.total; ++i) {
         this.isHovering[i] = true
+      }
+    },
+    async startEducation(item) {
+      const { data } = await this.$repositories.candidatesApply.startEducation(item.id);
+      if (data) {
+        this.$router.push(this.localePath(`/educations`))
+        this.$toast.success('Bắt đầu quá trình học tập!')
       }
     },
     pageChangeHandle(value) {
