@@ -1,5 +1,5 @@
 <template>
-  <main class="container-maintain">
+  <main class="container-maintain education-index">
     <div v-if="hidePage && error == ''" class="maintain row" style="height: 80vh">
       <div class="loader"></div>
     </div>
@@ -128,7 +128,7 @@
                       width="24px"
                       height="24px"
                     />
-                    Dự kiến hoàn thành-  <span class="fw-bold"> 16/07/2024</span>
+                    Yêu cầu hoàn thành-  <span class="fw-bold"> 16/07/2024</span>
                   </div>
                   <!-- <div v-if="language == 'vn'" class="time d-flex align-items-center">
                     <img
@@ -171,7 +171,7 @@
                 >
                   <div class="p-con">
                     <p>
-                      <button class="btn btn-primary" type="button" data-bs-toggle="collapse"
+                      <button v-if="data.is_unlocked" class="btn btn-primary" type="button" data-bs-toggle="collapse"
                         :data-bs-target="'#' + data.class"
                         aria-expanded="false"
                         :aria-controls="data.class"
@@ -196,10 +196,55 @@
                             </div>
                         </div>
                       </button>
+                      <button v-else class="btn btn-primary" type="button"
+                        :class="{'font-vi': $i18n.locale === 'vi', 'font-ja': $i18n.locale === 'ja'}"
+                        style="color: gray !important"
+                        @click="showUnlockModal(data)">
+                        <div class="row">
+                            <div
+                                    class="col-10 button-title fw-bold"
+                                    style="text-align: start; padding-left: 30px"
+                            >
+                                {{ data.course.title }}
+                            </div>
+                            <div
+                                    class="col-2 mid"
+                                    style="text-align: end; padding-right: 30px"
+                            >
+                                <img
+                                        src="../../assets/images/users/ic_lock.svg"
+                                        alt=""
+                                />
+                            </div>
+                        </div>
+                      </button>
                     </p>
                     <div :id="data.class" class="collapse">
                       <div class="card card-body text-start">
                         <ul class="course-module">
+                          <div v-if="data.mentor_shifts.length">
+                            <li v-for="(shift, index) in data.mentor_shifts" :key="shift.id" class="d-flex justify-content-around" style="background: white; border-bottom: 1px solid gray" @click="showMentor(shift.mentor)">
+                              <div>
+                                {{ index + 1 }}
+                              </div>
+                              <div>
+                                {{ shift.mentor.mentor_name }}
+                              </div>
+                              <div>
+                                {{ convertDayOfWeekEnglishToVietnamese(shift.day_of_week) }}
+                              </div>
+                              <div>
+                                {{ decimalToHourMinute(shift.shift_days[shift.day_of_week].start_hour) }} ~ {{ decimalToHourMinute(shift.shift_days[shift.day_of_week].end_hour) }}
+                              </div>
+                              <div>
+                                {{ mentorShiftStatus[shift.status - 1] }}
+                              </div>
+                            </li>
+                          </div>
+
+                          <li v-if="!data.is_finished" class="text-center" style="background: white" @click="openRequestMentorModal(data)">
+                            + Yêu cầu mentor
+                          </li>
                           <li v-for="(content, index) in data.course.modules" :key="index" class="d-flex justify-content-between" @click="$router.push(localePath(`/educations/courses/${data.course.id || data.course._id}/modules/${content.id || content._id}`, $i18n.locale))">
                             <span>{{ content.name }}</span>
                             <span>
@@ -217,6 +262,447 @@
           </div>
         </div>
       </div>
+
+    </div>
+    <button
+      ref="showUnlockModalBtn"
+      class="d-none"
+      data-bs-toggle="modal"
+      data-bs-target="#unlockModal"
+    />
+    <button
+      ref="showRequestMentorModal"
+      class="d-none"
+      data-bs-toggle="modal"
+      data-bs-target="#requestMentorModal"
+    />
+    <button
+      ref="showMentorModal"
+      class="d-none"
+      data-bs-toggle="modal"
+      data-bs-target="#mentorModal"
+    />
+    <div id="mentorModal" class="modal fade" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content box-modal">
+          <div class="modal-header border-0">
+            <div></div>
+            <img
+              ref="closeUnlockCancelModal"
+              class="close-modal"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+              src="../../assets/images/ic_exit.svg"
+              alt=""
+            >
+          </div>
+          <div class="modal-body">
+            <h1 class="text-center modal-body-text">
+              Thông tin mentor
+            </h1>
+            <div>
+              <div class="row form-group mb-3">
+                <div class="col-sm-4 col-lg-4 col-xl-3 text-left label-form-group">
+                  <h5 class="fw-bold">
+                    Tên mentor:
+                  </h5>
+                </div>
+                <div class="col-sm-8 col-lg-8 col-xl-9 text-left label-form-group">
+                  <h5>
+                    {{ showingMentor.mentor_name }}
+                  </h5>
+                </div>
+              </div>
+              <div class="row form-group mb-3">
+                <div class="col-sm-4 col-lg-4 col-xl-3 text-left label-form-group">
+                  <h5 class="fw-bold">
+                    Số zalo:
+                  </h5>
+                </div>
+                <div class="col-sm-8 col-lg-8 col-xl-9 text-left label-form-group">
+                  <h5>
+                    {{ showingMentor.zalo_number }}
+                  </h5>
+                </div>
+              </div>
+              <div class="row form-group mb-3">
+                <div class="col-sm-4 col-lg-4 col-xl-3 text-left label-form-group">
+                  <h5 class="fw-bold">
+                    Link facebook:
+                  </h5>
+                </div>
+                <div class="col-sm-8 col-lg-8 col-xl-9 text-left label-form-group">
+                  <a>
+                    {{ showingMentor.facebook_link }}
+                  </a>
+                </div>
+              </div>
+              <div class="row form-group mb-3">
+                <div class="col-sm-4 col-lg-4 col-xl-3 text-left label-form-group">
+                  <h5 class="fw-bold">
+                    Link X:
+                  </h5>
+                </div>
+                <div class="col-sm-8 col-lg-8 col-xl-9 text-left label-form-group">
+                  <a>
+                    {{ showingMentor.twitter_link }}
+                  </a>
+                </div>
+              </div>
+              <div class="row form-group mb-3">
+                <div class="col-sm-4 col-lg-4 col-xl-3 text-left label-form-group">
+                  <h5 class="fw-bold">
+                    Giới thiệu bản thân:
+                  </h5>
+                </div>
+                <div class="col-sm-8 col-lg-8 col-xl-9 text-left label-form-group">
+                  <h5>
+                    {{ showingMentor.biography }}
+                  </h5>
+                </div>
+              </div>
+            </div>
+            <!-- <h3 class="text-center modal-body-text">
+              Để mở khóa khóa học này cần <span class="fw-bold">{{ unlockingCourse.point_cost }}</span> point!
+            </h3>
+            <h3 class="text-center modal-body-text">
+              Bạn có chắc muốn mở khóa?
+            </h3> -->
+          </div>
+          <!-- <div class="modal-footer align-items-center d-flex justify-content-center flex-row">
+            <button type="button" class="btn btn-danger rounded-pill w-20 mt-4 mb-4" data-bs-dismiss="modal">Hủy</button>
+            <button type="button" class="btn btn-success rounded-pill w-20 btn-p" data-bs-dismiss="modal" @click="unlockCourse()">Mở khóa</button>
+          </div> -->
+        </div>
+      </div>
+    </div>
+    <div id="unlockModal" class="modal fade" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content box-modal">
+          <div class="modal-header border-0">
+            <div></div>
+            <img
+              ref="closeUnlockCancelModal"
+              class="close-modal"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+              src="../../assets/images/ic_exit.svg"
+              alt=""
+            >
+          </div>
+          <div class="modal-body">
+            <h1 class="text-center modal-body-text">
+              Mở khóa khóa học
+            </h1>
+            <div>
+              <div class="row form-group mb-3">
+                <div class="col-sm-4 col-lg-4 col-xl-3 text-left label-form-group">
+                  <h5 class="fw-bold">
+                    Tên khóa học:
+                  </h5>
+                </div>
+                <div class="col-sm-8 col-lg-8 col-xl-9 text-left label-form-group">
+                  <h5>
+                    {{ unlockingCourse.title }}
+                  </h5>
+                </div>
+              </div>
+              <div class="row form-group mb-3">
+                <div class="col-sm-4 col-lg-4 col-xl-3 text-left label-form-group">
+                  <h5 class="fw-bold">
+                    Hỗ trợ học bổng:
+                  </h5>
+                </div>
+                <div class="col-sm-8 col-lg-8 col-xl-9 text-left label-form-group">
+                  <h5>
+                    {{ jobEducation.scholarship }}%
+                  </h5>
+                </div>
+              </div>
+              <div class="row form-group mb-3">
+                <div class="col-sm-4 col-lg-4 col-xl-3 text-left label-form-group">
+                  <h5 class="fw-bold">
+                    Point tiêu tốn:
+                  </h5>
+                </div>
+                <div class="col-sm-8 col-lg-8 col-xl-9 text-left label-form-group">
+                  <h5>
+                    <span v-if="jobEducation.scholarship" style="text-decoration: line-through; color: gray">{{ unlockingCourse.point_cost }}</span>
+                    <span>{{ Math.round(unlockingCourse.point_cost * (100 - jobEducation.scholarship) / 100) }}</span>
+                    <span>point</span>
+                  </h5>
+                </div>
+              </div>
+              <div class="row form-group mb-3">
+                <div class="col-sm-4 col-lg-4 col-xl-3 text-left label-form-group">
+                  <h5 class="fw-bold label-form-cv">
+                    Yêu cầu hỗ trợ từ mentor:
+                  </h5>
+                </div>
+                <div class="col-sm-8 col-lg-8 col-xl-9 form-cv text-left label-form-group">
+                  <div class="d-flex align-items-start">
+                    <input
+                      id="cvInSystem"
+                      v-model="unlockData.request_mentor"
+                      type="radio"
+                      class="createCV"
+                      name="drone"
+                      value="0"
+                    />
+                    <label for="cvInSystem">Không</label>
+                  </div>
+
+                  <div style="margin-top: 12px" class="d-flex align-items-center form-cvUpload">
+                    <input
+                      id="cvUpload"
+                      v-model="unlockData.request_mentor"
+                      type="radio"
+                      class="upload"
+                      value="1"
+                      name="drone"
+                    />
+                    <label for="cvUpload">Có</label>
+                  </div>
+                </div>
+              </div>
+              <div v-if="unlockData.request_mentor == 1" class="row form-group">
+                <div class="col-sm-4 col-lg-4 col-xl-3 text-left label-form-group">
+                  <h5 class="fw-bold">
+                    Mentors:
+                  </h5>
+                </div>
+                <div class="col-sm-8 col-lg-8 col-xl-9">
+                  <div v-for="mentor in shownMentors" :key="mentor.id || mentor._id" class="mb-2 d-flex align-items-center">
+                    <div style="margin-right: 12px">
+                      {{ mentor.mentor_name }} | {{ mentor.day }} {{ mentor.start_hour }} ~ {{ mentor.end_hour }}
+                    </div>
+                    <el-button class="py-2 px-2" type="warning" @click="removeMentor(mentor)">Xóa</el-button>
+                  </div>
+                  <el-button type="primary" @click="mentorDialog = true">
+                    Thêm
+                  </el-button>
+                </div>
+              </div>
+            </div>
+            <!-- <h3 class="text-center modal-body-text">
+              Để mở khóa khóa học này cần <span class="fw-bold">{{ unlockingCourse.point_cost }}</span> point!
+            </h3>
+            <h3 class="text-center modal-body-text">
+              Bạn có chắc muốn mở khóa?
+            </h3> -->
+          </div>
+          <div class="modal-footer align-items-center d-flex justify-content-center flex-row">
+            <button type="button" class="btn btn-danger rounded-pill w-20 mt-4 mb-4" data-bs-dismiss="modal">Hủy</button>
+            <button type="button" class="btn btn-success rounded-pill w-20 btn-p" data-bs-dismiss="modal" @click="unlockCourse()">Mở khóa</button>
+          </div>
+        </div>
+      </div>
+      <el-dialog title="Tìm mentor" :modal-append-to-body="false" :visible.sync="mentorDialog" width="80%">
+        <div style="padding: 16px">
+          <div class="d-flex">
+            <el-select v-model="mentorData.day" style="margin-right: 20px" placeholder="Chọn ngày trong tuần">
+              <el-option v-for="day in daysOfWeek" :key="day.value" :label="day.label" :value="day.value"> </el-option>
+            </el-select>
+            <el-time-select
+              v-model="mentorData.start_hour"
+              :picker-options="{
+                start: '00:00',
+                step: '00:30',
+                end: mentorData.end_hour ? mentorData.end_hour : '23:30'
+              }"
+              style="margin-right: 20px"
+              placeholder="Chọn giờ bắt đầu">
+            </el-time-select>
+            <el-time-select
+              v-model="mentorData.end_hour"
+              :picker-options="{
+                start: mentorData.start_hour ? mentorData.start_hour : '00:00',
+                step: '00:30',
+                end: '23:30'
+              }"
+              style="margin-right: 20px"
+              placeholder="Chọn giờ kết thúc">
+            </el-time-select>
+            <el-button type="primary" @click="findMentor()">
+              Tìm
+            </el-button>
+          </div>
+          <el-table :data="mentorList" stripe style="width: 100%;">
+            <el-table-column
+              type="index"
+              width="50">
+            </el-table-column>
+            <el-table-column prop="mentor_name" label="Tên mentor"></el-table-column>
+            <el-table-column prop="numModules" label="Đánh giá">
+              <template slot-scope="scope">
+                <div>
+                  {{ scope.row.ratings ? `${scope.row.averageRating} (${scope.row.ratings.length} lượt đánh giá)` : 'Chưa có đánh giá' }}
+                </div>
+              </template>
+            </el-table-column>
+            <el-table-column prop="point_cost" label="Số khóa học đã nhận">
+              <template slot-scope="scope">
+                <div>
+                  {{ scope.row.shifts ? scope.row.shifts.length : 0 }}
+                </div>
+              </template>
+            </el-table-column>
+            <el-table-column>
+            <template slot-scope="scope">
+              <div>
+                <el-button type="primary" @click="addMentor(scope.row)">
+                  Thêm
+                </el-button>
+              </div>
+            </template>
+            </el-table-column>
+          </el-table>
+              <!-- <el-pagination
+                  style="margin: 8px 0"
+        background
+        layout="prev, pager, next"
+        @current-change="getCourseData"
+        :current-page.sync="coursePage"
+        :page-size="10"
+        :total="courseTotalResults">
+      </el-pagination> -->
+        </div>
+      </el-dialog>
+    </div>
+    <div id="requestMentorModal" class="modal fade" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content box-modal">
+          <div class="modal-header border-0">
+            <div></div>
+            <img
+              ref="closeUnlockCancelModal"
+              class="close-modal"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+              src="../../assets/images/ic_exit.svg"
+              alt=""
+            >
+          </div>
+          <div class="modal-body">
+            <h1 class="text-center modal-body-text">
+              Yêu cầu mentor
+            </h1>
+            <div>
+              <div class="row form-group mb-3">
+                <div class="col-sm-4 col-lg-4 col-xl-3 text-left label-form-group">
+                  <h5 class="fw-bold">
+                    Tên khóa học:
+                  </h5>
+                </div>
+                <div class="col-sm-8 col-lg-8 col-xl-9 text-left label-form-group">
+                  <h5>
+                    {{ unlockingCourse.title }}
+                  </h5>
+                </div>
+              </div>
+              <div class="row form-group">
+                <div class="col-sm-4 col-lg-4 col-xl-3 text-left label-form-group">
+                  <h5 class="fw-bold">
+                    Mentors:
+                  </h5>
+                </div>
+                <div class="col-sm-8 col-lg-8 col-xl-9">
+                  <div v-for="mentor in shownMentors" :key="mentor.id || mentor._id" class="mb-2 d-flex align-items-center">
+                    <div style="margin-right: 12px">
+                      {{ mentor.mentor_name }} | {{ mentor.day }} {{ mentor.start_hour }} ~ {{ mentor.end_hour }}
+                    </div>
+                    <el-button class="py-2 px-2" type="warning" @click="removeMentor(mentor)">Xóa</el-button>
+                  </div>
+                  <el-button type="primary" @click="requestMentorDialog = true">
+                    Thêm
+                  </el-button>
+                </div>
+              </div>
+            </div>
+            <!-- <h3 class="text-center modal-body-text">
+              Để mở khóa khóa học này cần <span class="fw-bold">{{ unlockingCourse.point_cost }}</span> point!
+            </h3>
+            <h3 class="text-center modal-body-text">
+              Bạn có chắc muốn mở khóa?
+            </h3> -->
+          </div>
+          <div class="modal-footer align-items-center d-flex justify-content-center flex-row">
+            <button type="button" class="btn btn-danger rounded-pill w-20 mt-4 mb-4" data-bs-dismiss="modal">Hủy</button>
+            <button type="button" class="btn btn-success rounded-pill w-20 btn-p" data-bs-dismiss="modal" @click="requestMentor">Yêu cầu</button>
+          </div>
+        </div>
+      </div>
+      <el-dialog title="Tìm mentor" :modal-append-to-body="false" :visible.sync="requestMentorDialog" width="80%">
+        <div style="padding: 16px">
+          <div class="d-flex">
+            <el-select v-model="mentorData.day" style="margin-right: 20px" placeholder="Chọn ngày trong tuần">
+              <el-option v-for="day in daysOfWeek" :key="day.value" :label="day.label" :value="day.value"> </el-option>
+            </el-select>
+            <el-time-select
+              v-model="mentorData.start_hour"
+              :picker-options="{
+                start: '00:00',
+                step: '00:30',
+                end: mentorData.end_hour ? mentorData.end_hour : '23:30'
+              }"
+              style="margin-right: 20px"
+              placeholder="Chọn giờ bắt đầu">
+            </el-time-select>
+            <el-time-select
+              v-model="mentorData.end_hour"
+              :picker-options="{
+                start: mentorData.start_hour ? mentorData.start_hour : '00:00',
+                step: '00:30',
+                end: '23:30'
+              }"
+              style="margin-right: 20px"
+              placeholder="Chọn giờ kết thúc">
+            </el-time-select>
+            <el-button type="primary" @click="findMentor()">
+              Tìm
+            </el-button>
+          </div>
+          <el-table :data="mentorList" stripe style="width: 100%;">
+            <el-table-column
+              type="index"
+              width="50">
+            </el-table-column>
+            <el-table-column prop="mentor_name" label="Tên mentor"></el-table-column>
+            <el-table-column prop="numModules" label="Đánh giá">
+              <template slot-scope="scope">
+                <div>
+                  {{ scope.row.ratings ? `${scope.row.averageRating} (${scope.row.ratings.length} lượt đánh giá)` : 'Chưa có đánh giá' }}
+                </div>
+              </template>
+            </el-table-column>
+            <el-table-column prop="point_cost" label="Số khóa học đã nhận">
+              <template slot-scope="scope">
+                <div>
+                  {{ scope.row.shifts ? scope.row.shifts.length : 0 }}
+                </div>
+              </template>
+            </el-table-column>
+            <el-table-column>
+            <template slot-scope="scope">
+              <div>
+                <el-button type="primary" @click="addMentor(scope.row)">
+                  Thêm
+                </el-button>
+              </div>
+            </template>
+            </el-table-column>
+          </el-table>
+              <!-- <el-pagination
+                  style="margin: 8px 0"
+        background
+        layout="prev, pager, next"
+        @current-change="getCourseData"
+        :current-page.sync="coursePage"
+        :page-size="10"
+        :total="courseTotalResults">
+      </el-pagination> -->
+        </div>
+      </el-dialog>
     </div>
   </main>
 </template>
@@ -225,16 +711,19 @@
 import { mapActions, mapGetters } from 'vuex'
 import 'bootstrap/dist/css/bootstrap.css'
 import theHomeCareers from '~/constants/homeCareers'
+import mentorShiftStatus from '~/constants/mentorShiftStatus'
 
 export default {
   name: 'JobDetail',
   layout: 'authUnrequired',
   data() {
     return {
+      mentorShiftStatus,
       datas: [{
         course: {
           modules: [],
         },
+        mentor_shifts: [],
         done_modules: [],
       }],
       isShowAlertLogin: true,
@@ -259,6 +748,51 @@ export default {
       isEnableLikeOrUnlikeClick: true,
       regionId: 0,
       totalProgress: 0,
+      unlockingCourse: {},
+      unlockData: {
+        request_mentor: 0,
+        mentor_data: [],
+      },
+      mentorData: {
+        day: '',
+        start_hour: '',
+        end_hour: '',
+      },
+      mentorDialog: false,
+      requestMentorDialog: false,
+      daysOfWeek: [
+        {
+          label: 'Thứ Hai',
+          value: 'monday',
+        },
+        {
+          label: 'Thứ Ba',
+          value: 'tuesday',
+        },
+        {
+          label: 'Thứ Tư',
+          value: 'wednesday',
+        },
+        {
+          label: 'Thứ Năm',
+          value: 'thursday',
+        },
+        {
+          label: 'Thứ Sáu',
+          value: 'friday',
+        },
+        {
+          label: 'Thứ Bảy',
+          value: 'saturday',
+        },
+        {
+          label: 'Chủ Nhật',
+          value: 'sunday',
+        },
+      ],
+      mentorList: [],
+      shownMentors: [],
+      showingMentor: {},
     }
   },
 
@@ -273,6 +807,19 @@ export default {
 
   computed: {
     ...mapGetters(['loggedInUser', 'isAuthenticated']),
+  },
+
+  watch: {
+    'unlockData.request_mentor'(newVal, oldVal) {
+      if (newVal === '0') {
+        this.unlockData.mentor_data = [];
+        this.mentorData = {
+          day: '',
+          start_hour: '',
+          end_hour: '',
+        }
+      }
+    }
   },
 
   mounted() {
@@ -314,6 +861,17 @@ export default {
         this.userRoadmap = data.userRoadmap
         this.totalProgress = data.roadmapProgress
         if (this.userRoadmap) {
+          if (this.userRoadmap.roadmap_milestone && this.userRoadmap.roadmap_milestone.length) {
+            this.userRoadmap.roadmap_milestone.forEach((milestone) => {
+              const mentorShifts = [];
+              data.mentorShifts.forEach((shift) => {
+                if (shift.course === milestone.course._id) {
+                  mentorShifts.push(shift)
+                }
+              })
+              milestone.mentor_shifts = [...mentorShifts]
+            })
+          }
           this.datas = this.userRoadmap.roadmap_milestone.map((item, index) => {
             return {
               ...item,
@@ -335,6 +893,131 @@ export default {
         }
       }
       return false
+    },
+
+    showUnlockModal(data) {
+      this.$refs.showUnlockModalBtn.click();
+      this.unlockingCourse = data.course
+    },
+
+    openRequestMentorModal(data) {
+      this.$refs.showRequestMentorModal.click();
+      this.unlockingCourse = data.course
+    },
+
+    async unlockCourse() {
+      const unlockParams = {
+        request_mentor: this.unlockData.request_mentor,
+        mentor_data: JSON.stringify(this.unlockData.mentor_data)
+      }
+      const { data } = await this.$repositories.candidatesApply.unlockCourse(this.unlockingCourse._id || this.unlockingCourse.id, unlockParams);
+      if (data) {
+        this.getDetailJob();
+        this.$toast.success('Đã mở khóa khóa học ' + this.unlockingCourse.title)
+        this.$refs.closeUnlockCancelModal.click();
+        this.unlockingCourse = {}
+      }
+    },
+
+    async findMentor() {
+      if (!this.mentorData.day || !this.mentorData.start_hour || !this.mentorData.end_hour) {
+        this.$toast.error('Thiếu điều kiện tìm kiếm')
+        return
+      }
+      const params = {
+        subject: this.unlockingCourse.skill_tags[0]?.skill,
+        level: this.convertLevel(this.unlockingCourse.skill_tags[0]?.level),
+        ...this.mentorData,
+      }
+      const { data } = await this.$repositories.mentors.findMentor(params);
+      if (data) {
+        this.mentorList = [...data]
+      }
+    },
+
+    async requestMentor() {
+      const { data } = await this.$repositories.candidatesApply.requestMentor(this.unlockingCourse._id || this.unlockingCourse.id, { mentor_data: JSON.stringify(this.unlockData.mentor_data) });
+      if (data) {
+        this.$toast.success('Đã yêu cầu mentors!')
+        this.unlockData = {
+          request_mentor: 0,
+          mentor_data: [],
+        }
+        this.shownMentors = []
+      }
+    },
+
+    convertLevel(level) {
+      if (level === 'Beginner') {
+        return 1;
+      }
+      if (level === 'Intermediate') {
+        return 2;
+      }
+      if (level === 'Advanced') {
+        return 3;
+      }
+    },
+
+    addMentor(mentor) {
+      this.unlockData.mentor_data.push({
+        mentorId: mentor.id || mentor._id,
+        weekday: {...this.mentorData}
+      })
+      this.shownMentors.push({
+        ...mentor,
+        day: this.daysOfWeek.find((item) => item.value === this.mentorData.day)?.label,
+        start_hour: this.mentorData.start_hour,
+        end_hour: this.mentorData.end_hour,
+      })
+      this.mentorData = {
+        day: '',
+        start_hour: '',
+        end_hour: '',
+      };
+      this.mentorList = []
+      this.mentorDialog = false;
+      this.requestMentorDialog = false;
+    },
+
+    removeMentor(mentor) {
+      const index1 = this.unlockData.mentor_data.findIndex((item) => item.mentorId === mentor.id || item.mentorId === mentor._id);
+      if (index1 !== -1) {
+        this.unlockData.mentor_data.splice(index1, 1);
+      }
+      const index2 = this.shownMentors.findIndex((item) => item.id === mentor.id || item._id === mentor._id);
+      if (index2 !== -1) {
+        this.shownMentors.splice(index1, 1);
+      }
+    },
+
+    showMentor(mentor) {
+      this.showingMentor = { ...mentor }
+      this.$refs.showMentorModal.click()
+    },
+
+    decimalToHourMinute(decimalHour) {
+      const hour = Math.floor(decimalHour);
+      const minute = Math.round((decimalHour - hour) * 60);
+      const hourString = String(hour).padStart(2, '0');
+      const minuteString = String(minute).padStart(2, '0');
+      return `${hourString}:${minuteString}`;
+    },
+
+    convertDayOfWeekEnglishToVietnamese(dayOfWeekEnglish) {
+      const daysOfWeekMapping = {
+        "monday": "Thứ Hai",
+        "tuesday": "Thứ Ba",
+        "wednesday": "Thứ Tư",
+        "thursday": "Thứ Năm",
+        "friday": "Thứ Sáu",
+        "saturday": "Thứ Bảy",
+        "sunday": "Chủ Nhật"
+      };
+
+      const lowercaseDay = dayOfWeekEnglish.toLowerCase();
+
+      return daysOfWeekMapping[lowercaseDay] || dayOfWeekEnglish;
     },
 
     ...mapActions({
@@ -361,6 +1044,9 @@ export default {
 <style lang="scss" scoped>
 @import '../../styles/pages/users/detail-roadmap.scss';
 @import "../../styles/components/modal/_apply_job_done_modal.scss";
+.modal-header {
+  justify-content: space-between;
+}
 .jobRequirement.requirements {
   ul {
     margin-bottom: 0 !important;
@@ -436,6 +1122,16 @@ export default {
   }
   .shown {
     border-bottom: 2px solid rgba(0, 0, 0, 0.125) !important;
+  }
+}
+#unlockModal .modal-dialog, #requestMentorModal .modal-dialog, #mentorModal .modal-dialog {
+  max-width: 800px;
+  .modal-body {
+    padding-top: 0 !important;
+  }
+  a {
+    color: #0d6efd;
+    text-decoration: underline;
   }
 }
 </style>

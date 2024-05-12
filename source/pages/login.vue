@@ -190,7 +190,8 @@
             await this.$auth.loginWith('local', {
               data: {
                 email: this.data.email,
-                password: this.data.password
+                password: this.data.password,
+                role: 'user',
               }
             }).then((res) => {
               if (res.status === 200) {

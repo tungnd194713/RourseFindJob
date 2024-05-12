@@ -98,6 +98,7 @@
                 </li>
               </ul>
             </div>
+            <div class="point-owned" style="margin-right: 16px">{{ loggedInUser.point_owned || 0 }} points</div>
             <img
               v-if="loggedInUser.profile_image"
               id="bridge"

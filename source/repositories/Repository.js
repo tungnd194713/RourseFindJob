@@ -7,6 +7,7 @@ import CandidateRepository from '~/repositories/CandidateRepository'
 import CandidateApplyRepository from "~/repositories/CandidateApplyRepository"
 import ContactRepository from '~/repositories/ContactRepository'
 import PageViewRepository from '~/repositories/PageViewRepository'
+import MentorRepository from '~/repositories/MentorRepository'
 
 export default ($axios) => ({
   post: PostRepository($axios),
@@ -18,5 +19,6 @@ export default ($axios) => ({
   candidatesApply: CandidateApplyRepository($axios),
   contact: ContactRepository($axios),
   pageviews: PageViewRepository($axios),
+  mentors: MentorRepository($axios),
 })
 

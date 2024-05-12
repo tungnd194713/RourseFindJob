@@ -19,4 +19,10 @@ export default ($axios) => ({
   watchedModule(courseId, moduleId) {
     return $axios.get(`/users/educations/courses/${courseId}/modules/${moduleId}/watched`);
   },
+  unlockCourse(courseId, data) {
+    return $axios.post(`/users/educations/courses/${courseId}/unlock`, data);
+  },
+  requestMentor(courseId, data) {
+    return $axios.post(`/users/educations/courses/${courseId}/request-mentors`, data);
+  },
 })
