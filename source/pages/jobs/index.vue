@@ -5,8 +5,22 @@
         <!-- left -->
         <div class="col-12 col-sm-12 col-md-12 col-lg-3">
           <div class="search">
-            <div class="monthly-salary">
-              <h4>{{ $t('general.monthly_salary') }}</h4>
+            <div class="monthly-salary mb-3">
+              <h4>Vị trí tuyển dụng</h4>
+              <div class="input-group input-group-icon">
+              <span class="input-group-text input-group-text-pre">
+                  <img
+                    src="../../assets/images/users/icon_stay.svg"
+                    alt=""
+                    height="20px"
+                  >
+              </span>
+              <input v-model="condition.title" type="text" class="form-input" placeholder="Nhập vị trí tuyển dụng">
+              </div>
+            </div>
+
+            <div class="monthly-salary mb-3">
+              <h4>Lương tối thiểu</h4>
               <div class="input-group input-group-icon">
               <span class="input-group-text input-group-text-pre">
                   <img
@@ -15,49 +29,21 @@
                     height="20px"
                   >
               </span>
-                <select
-                  id="inputGroupSelect01"
-                  v-model="condition.salary"
-                  class="form-select"
-                  :class="{ 'bl-text': condition.salary !== 0 }"
-                >
-                  <option
-                    v-for="(item, index) in salaryList"
-                    :key="index"
-                    :value="index"
-                    class="gray-text"
-                  >
-                    {{ $t(item) }}
-                  </option>
-                </select>
+              <input v-model="condition.salary_min" type="number" class="form-input" placeholder="Nhập mức lương tối thiểu">
               </div>
             </div>
 
-            <!-- <div class="stay" style="margin-top:13px">
-              <h4>{{ $t('general.status_stay') }}</h4>
+            <div class="monthly-salary mb-3">
+              <h4>Lương tối đa</h4>
               <div class="input-group input-group-icon">
-            <span class="input-group-text input-group-text-pre">
-                <img
-                  src="../../assets/images/users/icon_stay.svg"
-                  alt=""
-                  height="20px"
-                >
-            </span>
-                <select
-                  id="inputGroupSelect02"
-                  v-model="condition.status_stay"
-                  class="form-select"
-                  :class="{ 'bl-text': condition.status_stay !== 0 }"
-                >
-                  <option
-                    v-for="(item, index) in statusStayList"
-                    :key="index"
-                    :value="index"
-                    class="gray-text"
+              <span class="input-group-text input-group-text-pre">
+                  <img
+                    src="../../assets/images/users/icon_money_jp.svg"
+                    alt=""
+                    height="20px"
                   >
-                    {{ $t(item) }}
-                  </option>
-                </select>
+              </span>
+              <input v-model="condition.salary_max" type="number" class="form-input" placeholder="Nhập mức lương tối đa">
               </div>
             </div>
 
@@ -73,9 +59,9 @@
             </span>
                 <select
                   id="inputGroupSelect03"
-                  v-model="condition.region_id"
+                  v-model="condition.province_id"
                   class="form-select"
-                  :class="{ 'bl-text': condition.region_id !== 0 }"
+                  :class="{ 'bl-text': condition.province_id !== 0 }"
                 >
                   <option
                     v-for="(item, index) in regionsList"
@@ -87,7 +73,7 @@
                   </option>
                 </select>
               </div>
-            </div> -->
+            </div>
 
             <div ref="find" class="search-button" @click="search">
               <img src="../../assets/images/users/icon_search.svg" alt="" width="20px" height="20px">
@@ -161,7 +147,6 @@ import JobSummary from "../../components/jobs/JobSummary"
 import ApplyJobAlertModal from "~/components/modal/ApplyJobAlertModal"
 import Pagination from "~/components/Pagination"
 import theProvinces from '~/constants/provinces'
-import regions from '~/constants/regions'
 import theStatusStay from '~/constants/statusStay'
 import theSalary from '~/constants/salaryOptions'
 import theCareers from '~/constants/careers'
@@ -186,8 +171,7 @@ export default {
       status_alert: 0,
       salaryList: theSalary,
       statusStayList: theStatusStay,
-      provinceList: theProvinces,
-      regionsList: regions,
+      regionsList: theProvinces,
       careerList: theCareers,
       jobsList: [],
       currentPage: 1,
@@ -196,11 +180,10 @@ export default {
       pageCount: 1,
       condition: {
         salary: 0,
-          salary_min: 0,
-          salary_max: 0,
+        salary_min: 0,
+        salary_max: 0,
         status_stay: 0,
         province_id: 0,
-        region_id: 0,
         career: 0
       },
       loadingJobList: true,
@@ -246,10 +229,9 @@ export default {
       this.statusStayList[0] = 'status_stay.status_0'
       this.condition.salary_min = this.$route.query.salary_min ? this.$route.query.salary_min : 0
       this.condition.salary_max = this.$route.query.salary_max ? this.$route.query.salary_max : 0
-      this.condition.salary = this.$route.query.salary ? this.$route.query.salary : 0
       this.condition.status_stay = this.$route.query.status_stay ? this.$route.query.status_stay : 0
       this.condition.province_id = this.$route.query.province_id ? this.$route.query.province_id : 0
-      this.condition.region_id = this.$route.query.region_id ? this.$route.query.region_id : 0
+      this.condition.province_id = this.$route.query.province_id ? this.$route.query.province_id : 0
       this.condition.career = this.$route.query.career ? this.$route.query.career : ''
     },
 
@@ -283,21 +265,9 @@ export default {
 
     search() {
       this.currentPage = 1
-      const q = {}
-        this.condition.salary_min = 0
-        this.condition.salary_max = 0
-      if (this.condition.salary) q.salary = this.condition.salary
-      if (this.condition.status_stay) q.status_stay = this.condition.status_stay
-      if (this.condition.region_id) {
-          q.region_id = this.condition.region_id
-          this.getProvinceId(this.condition.region_id)
-          q.province_id = this.condition.province_id
-      }
-      if (this.condition.career) q.career = this.condition.career
-      this.$router.replace({
-        path: this.localePath('/jobs', this.$i18n.locale),
-        query: q
-      })
+      // if (this.condition.career) q.career = this.condition.career
+      this.getJobsListFromApi(this.currentPage)
+
 //      this.getJobsListFromApi(this.currentPage)
 //       this.$refs.find.click()
     },
@@ -325,26 +295,6 @@ export default {
       this.status_alert = ADD_JOB_TO_FAVORITE_LIST_BUT_NOT_LOGGED_IN
       this.$refs.showPopUpAlertBtn.click()
     },
-
-      getProvinceId(regionId) {
-        if (regionId <= 1) {
-            this.condition.province_id = '1'
-        } else if(regionId === 2) {
-              this.condition.province_id = '2,3,4,5,6,7'
-        } else if(regionId === 3) {
-            this.condition.province_id = '8,9,10,11,12,13,14'
-        } else if(regionId === 4) {
-            this.condition.province_id = '15,16,17,18,19,20,21,22,23'
-        } else if(regionId === 5) {
-            this.condition.province_id = '24,25,26,27,28,29,30'
-        } else if(regionId === 6) {
-            this.condition.province_id = '31,32,33,34,35'
-        } else if(regionId === 7) {
-            this.condition.province_id = '36,37,38,39'
-        } else if(regionId === 8) {
-            this.condition.province_id = '40,41,42,43,44,45,46,47'
-        }
-      }
   }
 }
 </script>

@@ -25,4 +25,25 @@ export default ($axios) => ({
   requestMentor(courseId, data) {
     return $axios.post(`/users/educations/courses/${courseId}/request-mentors`, data);
   },
+  addMentorRating(body) {
+    return $axios.post(`/users/educations/rating-mentor`, body);
+  },
+  getTestById(courseId, testId) {
+    return $axios.get(`/users/educations/courses/${courseId}/tests/${testId}`);
+  },
+  getUserAnswerSheet(courseId, testId) {
+    return $axios.get(`/users/educations/courses/${courseId}/tests/${testId}/sheets`);
+  },
+  submitAnswerSheet(courseId, answerSheetId, body) {
+    return $axios.put(`/users/educations/courses/${courseId}/sheets/${answerSheetId}/submit`, body);
+  },
+  createAnswerSheet(testId, body) {
+    return $axios.post(`/users/educations/tests/${testId}/sheets/create`, body);
+  },
+  updateAnswerSheetById(answerSheetId, body) {
+    return $axios.put(`/users/educations/sheets/${answerSheetId}`, body);
+  },
+  getAnswerSheetById(answerSheetId) {
+    return $axios.put(`/users/educations/sheets/${answerSheetId}`);
+  }
 })

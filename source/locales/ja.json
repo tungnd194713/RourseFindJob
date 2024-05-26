@@ -531,11 +531,11 @@
     "visa_type_7": "医療滞在査証"
   },
   "salary_option": {
-    "salary_0": "月給",
-    "salary_1": "～15万未満",
-    "salary_2": "15万～20万未満",
-    "salary_3": "20万～25万未満",
-    "salary_4": "25万以上"
+    "salary_0": "Mức lương",
+    "salary_1": "Dưới 10 triệu",
+    "salary_2": "Từ 10 triệu đến 20 triệu",
+    "salary_3": "Từ 20 triệu đến 30 triệu",
+    "salary_4": "Trên 30 triệu"
   },
   "form_recruitment": {
     "form_recruitment_0": "",

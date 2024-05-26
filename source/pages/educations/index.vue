@@ -182,7 +182,10 @@
                                     class="col-10 button-title fw-bold"
                                     style="text-align: start; padding-left: 30px"
                             >
-                                {{ data.course.title }} ({{data.done_modules.length / data.course.modules.length * 100}}%)
+                                {{ data.course.title }}
+                                <span>
+                                  <img v-if="data.is_finished" src="../../assets/images/users/draft/checked-icon.png" alt="" width="18" height="18">
+                                </span>
                             </div>
                             <div
                                     class="col-2 mid"
@@ -223,7 +226,7 @@
                       <div class="card card-body text-start">
                         <ul class="course-module">
                           <div v-if="data.mentor_shifts.length">
-                            <li v-for="(shift, index) in data.mentor_shifts" :key="shift.id" class="d-flex justify-content-around" style="background: white; border-bottom: 1px solid gray" @click="showMentor(shift.mentor)">
+                            <li v-for="(shift, index) in data.mentor_shifts" :key="shift.id" class="d-flex justify-content-around" style="background: white; border-bottom: 1px solid gray" @click="showMentor(shift)">
                               <div>
                                 {{ index + 1 }}
                               </div>
@@ -231,12 +234,12 @@
                                 {{ shift.mentor.mentor_name }}
                               </div>
                               <div>
-                                {{ convertDayOfWeekEnglishToVietnamese(shift.day_of_week) }}
+                                {{ shift.shift_days ? convertDayOfWeekEnglishToVietnamese(Object.keys(shift.shift_days)[0]) : '' }}
                               </div>
-                              <div>
-                                {{ decimalToHourMinute(shift.shift_days[shift.day_of_week].start_hour) }} ~ {{ decimalToHourMinute(shift.shift_days[shift.day_of_week].end_hour) }}
+                              <div v-if="shift.shift_days">
+                                {{ decimalToHourMinute(shift.shift_days[Object.keys(shift.shift_days)[0]].start_hour) }} ~ {{ decimalToHourMinute(shift.shift_days[Object.keys(shift.shift_days)[0]].end_hour) }}
                               </div>
-                              <div>
+                              <div style="min-width: 120px">
                                 {{ mentorShiftStatus[shift.status - 1] }}
                               </div>
                             </li>
@@ -249,6 +252,16 @@
                             <span>{{ content.name }}</span>
                             <span>
                               <img v-if="isModuleFinish(content.id || content._id, data)" src="../../assets/images/users/draft/checked-icon.png" alt="" width="18" height="18">
+                            </span>
+                          </li>
+                          <li v-for="(test, index) in data.tests" :key="index" class="d-flex justify-content-between align-items-center" @click="$router.push(localePath(`/educations/courses/${data.course.id || data.course._id}/tests/${test.test.id || test.test._id}`, $i18n.locale))">
+                            <div>
+                              <div>Bài test {{ index + 1 }}: {{ test.test.name }} ({{ test.test.questions.length }} câu hỏi)</div>
+                              <div v-if="test.isFinished">Hoàn thành lúc: {{ test.answerSheet.finishedAt.split('T')[0] }} {{ test.answerSheet.finishedAt.split('T')[1].substring(0, test.answerSheet.finishedAt.split('T')[1].length - 1)  }}</div>
+                              <div v-if="test.isFinished">Điểm số: {{ test.answerSheet.mark / test.answerSheet.choices.length * 100 }}% - {{ test.answerSheet.mark }} / {{ test.answerSheet.choices.length }} câu trả lời đúng</div>
+                            </div>
+                            <span>
+                              <img v-if="test.isFinished" src="../../assets/images/users/draft/checked-icon.png" alt="" width="18" height="18">
                             </span>
                           </li>
                         </ul>
@@ -369,12 +382,31 @@
               Bạn có chắc muốn mở khóa?
             </h3> -->
           </div>
-          <!-- <div class="modal-footer align-items-center d-flex justify-content-center flex-row">
-            <button type="button" class="btn btn-danger rounded-pill w-20 mt-4 mb-4" data-bs-dismiss="modal">Hủy</button>
-            <button type="button" class="btn btn-success rounded-pill w-20 btn-p" data-bs-dismiss="modal" @click="unlockCourse()">Mở khóa</button>
-          </div> -->
+          <div class="modal-footer align-items-center d-flex justify-content-center flex-row">
+            <!-- <button type="button" class="btn btn-danger rounded-pill w-20 mt-4 mb-4" data-bs-dismiss="modal">Hủy</button> -->
+            <button v-if="!checkUserRating(showingMentor.ratings, showingMentorShift.course)" type="button" class="btn btn-success rounded-pill w-20 btn-p" @click="openRatingDialog">Đánh giá</button>
+            <button v-else type="button" class="btn btn-secondary rounded-pill w-20 btn-p" @click="openRatingDialog">Đã đánh giá</button>
+          </div>
         </div>
       </div>
+      <el-dialog title="Đánh giá mentor" :modal-append-to-body="false" :visible.sync="ratingDialog" width="30%" class="rating-mentor">
+        <div class="d-flex justify-content-center">
+          <h1>
+            <b>{{ showingMentor.mentor_name }}</b>
+          </h1>
+        </div>
+        <div class="d-flex justify-content-center mb-5">
+          <el-rate
+            v-model="rating.rating_star">
+          </el-rate>
+        </div>
+        <el-input v-model="rating.rating_content" type="textarea" placeholder="Viết đánh giá"></el-input>
+        <div slot="footer" class="dialog-footer">
+          <el-button @click="ratingDialog = false">Hủy bỏ</el-button>
+          <el-button v-if="checkUserRating(showingMentor.ratings, showingMentorShift.course)" type="danger" @click="removeRating">Xóa đánh giá</el-button>
+          <el-button type="primary" @click="submitRating">{{ checkUserRating(showingMentor.ratings, showingMentorShift.course) ? 'Cập nhật đánh giá' : 'Đánh giá' }}</el-button>
+        </div>
+      </el-dialog>
     </div>
     <div id="unlockModal" class="modal fade" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
       <div class="modal-dialog modal-dialog-centered">
@@ -499,30 +531,34 @@
       </div>
       <el-dialog title="Tìm mentor" :modal-append-to-body="false" :visible.sync="mentorDialog" width="80%">
         <div style="padding: 16px">
+          <h3>Tìm theo ca làm việc: </h3>
           <div class="d-flex">
-            <el-select v-model="mentorData.day" style="margin-right: 20px" placeholder="Chọn ngày trong tuần">
+            <el-select v-model="findMentorData.day" style="margin-right: 20px" placeholder="Chọn ngày trong tuần">
               <el-option v-for="day in daysOfWeek" :key="day.value" :label="day.label" :value="day.value"> </el-option>
             </el-select>
             <el-time-select
-              v-model="mentorData.start_hour"
+              v-model="findMentorData.start_hour"
               :picker-options="{
                 start: '00:00',
                 step: '00:30',
-                end: mentorData.end_hour ? mentorData.end_hour : '23:30'
+                end: findMentorData.end_hour ? findMentorData.end_hour : '23:30'
               }"
               style="margin-right: 20px"
               placeholder="Chọn giờ bắt đầu">
             </el-time-select>
             <el-time-select
-              v-model="mentorData.end_hour"
+              v-model="findMentorData.end_hour"
               :picker-options="{
-                start: mentorData.start_hour ? mentorData.start_hour : '00:00',
+                start: findMentorData.start_hour ? findMentorData.start_hour : '00:00',
                 step: '00:30',
                 end: '23:30'
               }"
               style="margin-right: 20px"
               placeholder="Chọn giờ kết thúc">
             </el-time-select>
+            <el-select v-model="searchStar" style="margin-right: 20px" placeholder="Chọn đánh giá tối thiểu">
+              <el-option v-for="star in [0, 1, 2, 3, 4, 5]" :key="star" :label="star + ' sao'" :value="star"> </el-option>
+            </el-select>
             <el-button type="primary" @click="findMentor()">
               Tìm
             </el-button>
@@ -536,7 +572,12 @@
             <el-table-column prop="numModules" label="Đánh giá">
               <template slot-scope="scope">
                 <div>
-                  {{ scope.row.ratings ? `${scope.row.averageRating} (${scope.row.ratings.length} lượt đánh giá)` : 'Chưa có đánh giá' }}
+                  <div v-if="scope.row.ratings" class="d-flex">
+                    {{ scope.row.avgRating }}
+                    <i class="el-rate__icon el-icon-star-on" style="color: rgb(247, 186, 42);"></i>
+                    ({{ scope.row.ratings.length }} lượt đánh giá)
+                  </div>
+                  <div v-else>Chưa có đánh giá</div>
                 </div>
               </template>
             </el-table-column>
@@ -550,7 +591,7 @@
             <el-table-column>
             <template slot-scope="scope">
               <div>
-                <el-button type="primary" @click="addMentor(scope.row)">
+                <el-button type="primary" @click="openRequestMentorDialog(scope.row)">
                   Thêm
                 </el-button>
               </div>
@@ -567,6 +608,81 @@
         :total="courseTotalResults">
       </el-pagination> -->
         </div>
+        <el-dialog
+          width="50%"
+          title="Yêu cầu mentor"
+          :visible.sync="requestHourDialog"
+          append-to-body>
+          <div v-if="requestingMentor.weekdays">
+            <el-row :gutter="4" class="mb-4">
+              <el-col :span="6">Mentor: </el-col>
+              <el-col :span="18"><b>{{ requestingMentor.mentor_name }}</b></el-col>
+            </el-row>
+            <el-row :gutter="4" class="mb-4">
+              <el-col :span="6">
+                <div class="grid-content bg-purple">
+                  Ngày trong tuần
+                </div>
+              </el-col>
+              <el-col :span="18">
+                <div class="grid-content bg-purple">
+                  <el-select v-model="mentorData.day" style="margin-right: 20px" placeholder="Chọn ngày trong tuần">
+                    <el-option v-for="day in filteredDays(Object.keys(requestingMentor.weekdays))" :key="day.value" :label="day.label" :value="day.value"> </el-option>
+                  </el-select>
+                </div>
+              </el-col>
+            </el-row>
+            <el-row v-if="mentorData.day" :gutter="4" class="mb-4">
+              <el-col :span="6">
+                <div class="grid-content bg-purple">
+                  Giờ bắt đầu
+                </div>
+              </el-col>
+              <el-col :span="18">
+                <div class="grid-content bg-purple">
+                  <el-time-select
+                    v-model="mentorData.start_hour"
+                    :picker-options="{
+                      start: '00:00',
+                      step: '00:30',
+                      end: '23:30',
+                      minTime: decimalToHourMinute(requestingMentor.weekdays[mentorData.day].start_hour),
+                      maxTime: decimalToHourMinute(requestingMentor.weekdays[mentorData.day].end_hour),
+                    }"
+                    style="margin-right: 20px"
+                    placeholder="Chọn giờ bắt đầu">
+                  </el-time-select>
+                </div>
+              </el-col>
+            </el-row>
+            <el-row v-if="mentorData.day" :gutter="4" class="mb-4">
+              <el-col :span="6">
+                <div class="grid-content bg-purple">
+                  Giờ kết thúc
+                </div>
+              </el-col>
+              <el-col :span="18">
+                <div class="grid-content bg-purple">
+                  <el-time-select
+                    v-model="mentorData.end_hour"
+                    :picker-options="{
+                      start: '00:00',
+                      step: '00:30',
+                      end: '23:30',
+                      minTime: decimalToHourMinute(requestingMentor.weekdays[mentorData.day].start_hour),
+                      maxTime: decimalToHourMinute(requestingMentor.weekdays[mentorData.day].end_hour),
+                    }"
+                    style="margin-right: 20px"
+                    placeholder="Chọn giờ kết thúc">
+                  </el-time-select>
+                </div>
+              </el-col>
+            </el-row>
+          </div>
+          <div slot="footer" class="dialog-footer">
+            <el-button type="primary" @click="addMentor(requestingMentor)">Yêu cầu mentor</el-button>
+          </div>
+        </el-dialog>
       </el-dialog>
     </div>
     <div id="requestMentorModal" class="modal fade" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -634,30 +750,34 @@
       </div>
       <el-dialog title="Tìm mentor" :modal-append-to-body="false" :visible.sync="requestMentorDialog" width="80%">
         <div style="padding: 16px">
+          <h3>Tìm theo ca làm việc: </h3>
           <div class="d-flex">
-            <el-select v-model="mentorData.day" style="margin-right: 20px" placeholder="Chọn ngày trong tuần">
+            <el-select v-model="findMentorData.day" style="margin-right: 20px" placeholder="Chọn ngày trong tuần">
               <el-option v-for="day in daysOfWeek" :key="day.value" :label="day.label" :value="day.value"> </el-option>
             </el-select>
             <el-time-select
-              v-model="mentorData.start_hour"
+              v-model="findMentorData.start_hour"
               :picker-options="{
                 start: '00:00',
                 step: '00:30',
-                end: mentorData.end_hour ? mentorData.end_hour : '23:30'
+                end: findMentorData.end_hour ? findMentorData.end_hour : '23:30'
               }"
               style="margin-right: 20px"
               placeholder="Chọn giờ bắt đầu">
             </el-time-select>
             <el-time-select
-              v-model="mentorData.end_hour"
+              v-model="findMentorData.end_hour"
               :picker-options="{
-                start: mentorData.start_hour ? mentorData.start_hour : '00:00',
+                start: findMentorData.start_hour ? findMentorData.start_hour : '00:00',
                 step: '00:30',
                 end: '23:30'
               }"
               style="margin-right: 20px"
               placeholder="Chọn giờ kết thúc">
             </el-time-select>
+            <el-select v-model="searchStar" style="margin-right: 20px" placeholder="Chọn đánh giá tối thiểu">
+              <el-option v-for="star in [0, 1, 2, 3, 4, 5]" :key="star" :label="star + ' sao'" :value="star"> </el-option>
+            </el-select>
             <el-button type="primary" @click="findMentor()">
               Tìm
             </el-button>
@@ -671,7 +791,12 @@
             <el-table-column prop="numModules" label="Đánh giá">
               <template slot-scope="scope">
                 <div>
-                  {{ scope.row.ratings ? `${scope.row.averageRating} (${scope.row.ratings.length} lượt đánh giá)` : 'Chưa có đánh giá' }}
+                  <div v-if="scope.row.ratings" class="d-flex">
+                    {{ scope.row.avgRating }}
+                    <i class="el-rate__icon el-icon-star-on" style="color: rgb(247, 186, 42);"></i>
+                    ({{ scope.row.ratings.length }} lượt đánh giá)
+                  </div>
+                  <div v-else>Chưa có đánh giá</div>
                 </div>
               </template>
             </el-table-column>
@@ -685,7 +810,7 @@
             <el-table-column>
             <template slot-scope="scope">
               <div>
-                <el-button type="primary" @click="addMentor(scope.row)">
+                <el-button type="primary" @click="openRequestMentorDialog(scope.row)">
                   Thêm
                 </el-button>
               </div>
@@ -702,6 +827,81 @@
         :total="courseTotalResults">
       </el-pagination> -->
         </div>
+        <el-dialog
+          width="50%"
+          title="Yêu cầu mentor"
+          :visible.sync="requestHourDialog"
+          append-to-body>
+          <div v-if="requestingMentor.weekdays">
+            <el-row :gutter="4" class="mb-4">
+              <el-col :span="6">Mentor: </el-col>
+              <el-col :span="18"><b>{{ requestingMentor.mentor_name }}</b></el-col>
+            </el-row>
+            <el-row :gutter="4" class="mb-4">
+              <el-col :span="6">
+                <div class="grid-content bg-purple">
+                  Ngày trong tuần
+                </div>
+              </el-col>
+              <el-col :span="18">
+                <div class="grid-content bg-purple">
+                  <el-select v-model="mentorData.day" style="margin-right: 20px" placeholder="Chọn ngày trong tuần">
+                    <el-option v-for="day in filteredDays(Object.keys(requestingMentor.weekdays))" :key="day.value" :label="day.label" :value="day.value"> </el-option>
+                  </el-select>
+                </div>
+              </el-col>
+            </el-row>
+            <el-row v-if="mentorData.day" :gutter="4" class="mb-4">
+              <el-col :span="6">
+                <div class="grid-content bg-purple">
+                  Giờ bắt đầu
+                </div>
+              </el-col>
+              <el-col :span="18">
+                <div class="grid-content bg-purple">
+                  <el-time-select
+                    v-model="mentorData.start_hour"
+                    :picker-options="{
+                      start: '00:00',
+                      step: '00:30',
+                      end: '23:30',
+                      minTime: decimalToHourMinute(requestingMentor.weekdays[mentorData.day].start_hour),
+                      maxTime: decimalToHourMinute(requestingMentor.weekdays[mentorData.day].end_hour),
+                    }"
+                    style="margin-right: 20px"
+                    placeholder="Chọn giờ bắt đầu">
+                  </el-time-select>
+                </div>
+              </el-col>
+            </el-row>
+            <el-row v-if="mentorData.day" :gutter="4" class="mb-4">
+              <el-col :span="6">
+                <div class="grid-content bg-purple">
+                  Giờ kết thúc
+                </div>
+              </el-col>
+              <el-col :span="18">
+                <div class="grid-content bg-purple">
+                  <el-time-select
+                    v-model="mentorData.end_hour"
+                    :picker-options="{
+                      start: '00:00',
+                      step: '00:30',
+                      end: '23:30',
+                      minTime: decimalToHourMinute(requestingMentor.weekdays[mentorData.day].start_hour),
+                      maxTime: decimalToHourMinute(requestingMentor.weekdays[mentorData.day].end_hour),
+                    }"
+                    style="margin-right: 20px"
+                    placeholder="Chọn giờ kết thúc">
+                  </el-time-select>
+                </div>
+              </el-col>
+            </el-row>
+          </div>
+          <div slot="footer" class="dialog-footer">
+            <el-button type="primary" @click="addMentor(requestingMentor)">Yêu cầu mentor</el-button>
+          </div>
+        </el-dialog>
       </el-dialog>
     </div>
   </main>
@@ -726,6 +926,11 @@ export default {
         mentor_shifts: [],
         done_modules: [],
       }],
+      iconClasses: ['icon-rate-face-1', 'icon-rate-face-2', 'icon-rate-face-3'],
+      rating: {
+        rating_content: '',
+        rating_star: 0,
+      },
       isShowAlertLogin: true,
       url_api_file: process.env.URL_FILE,
       items: {},
@@ -754,6 +959,11 @@ export default {
         mentor_data: [],
       },
       mentorData: {
+        day: '',
+        start_hour: '',
+        end_hour: '',
+      },
+      findMentorData: {
         day: '',
         start_hour: '',
         end_hour: '',
@@ -793,6 +1003,11 @@ export default {
       mentorList: [],
       shownMentors: [],
       showingMentor: {},
+      showingMentorShift: {},
+      ratingDialog: false,
+      searchStar: '',
+      requestingMentor: {},
+      requestHourDialog: false,
     }
   },
 
@@ -818,6 +1033,12 @@ export default {
           start_hour: '',
           end_hour: '',
         }
+        this.findMentorData = {
+          day: '',
+          start_hour: '',
+          end_hour: '',
+        }
+        this.searchStar = ''
       }
     }
   },
@@ -904,7 +1125,67 @@ export default {
       this.$refs.showRequestMentorModal.click();
       this.unlockingCourse = data.course
     },
-
+    checkUserRating(ratings, course) {
+      if (ratings && ratings.length) {
+        const rating = ratings.find((item) => item.course === course && (item.user === this.loggedInUser._id || item.user === this.loggedInUser.id));
+        if (rating) {
+          return rating;
+        }
+      }
+      return false;
+    },
+    openRatingDialog() {
+      this.rating.mentor = this.showingMentor._id || this.showingMentor.id
+      this.rating.mentorShift = this.showingMentorShift._id || this.showingMentorShift.id
+      this.rating.course = this.showingMentorShift.course
+      this.ratingDialog = true
+      if (this.showingMentor.ratings && this.showingMentor.ratings.length) {
+        const rating = this.checkUserRating(this.showingMentor.ratings, this.showingMentorShift.course);
+        if (rating) {
+          this.rating.rating_star = rating.rating_star
+          this.rating.rating_content = rating.rating_content
+        }
+      }
+    },
+    async submitRating() {
+      const { data } = await this.$repositories.candidatesApply.addMentorRating(this.rating);
+      if (data) {
+        this.ratingDialog = false
+        this.rating = {
+          rating_content: '',
+          rating_star: 0,
+        }
+        const index = this.showingMentor.ratings.findIndex((item) => item.course === this.showingMentorShift.course && (item.user === this.loggedInUser._id || item.user === this.loggedInUser.id));
+        if (index !== -1) {
+          this.showingMentor.ratings[index].rating_star = data.rating_star
+          this.showingMentor.ratings[index].rating_content = data.rating_content
+        } else {
+          this.showingMentor.ratings.push({
+            ...data,
+          })
+        }
+        this.$toast.success('Đã đánh giá mentor!');
+      }
+    },
+    async removeRating() {
+      const { data } = await this.$repositories.candidatesApply.addMentorRating({
+        ...this.rating,
+        is_remove: true,
+      });
+      if (data) {
+        this.ratingDialog = false
+        this.rating = {
+          rating_content: '',
+          rating_star: 0,
+        }
+        this.getDetailJob()
+        const index = this.showingMentor.ratings.findIndex((item) => item.course === this.showingMentorShift.course && (item.user === this.loggedInUser._id || item.user === this.loggedInUser.id));
+        if (index !== -1) {
+          this.showingMentor.ratings.splice(index, 1);
+        }
+        this.$toast.success('Đã xoá đánh giá mentor!');
+      }
+    },
     async unlockCourse() {
       const unlockParams = {
         request_mentor: this.unlockData.request_mentor,
@@ -920,14 +1201,11 @@ export default {
     },
 
     async findMentor() {
-      if (!this.mentorData.day || !this.mentorData.start_hour || !this.mentorData.end_hour) {
-        this.$toast.error('Thiếu điều kiện tìm kiếm')
-        return
-      }
       const params = {
         subject: this.unlockingCourse.skill_tags[0]?.skill,
         level: this.convertLevel(this.unlockingCourse.skill_tags[0]?.level),
-        ...this.mentorData,
+        ...this.findMentorData,
+        avgRating: this.searchStar,
       }
       const { data } = await this.$repositories.mentors.findMentor(params);
       if (data) {
@@ -959,6 +1237,15 @@ export default {
       }
     },
 
+    openRequestMentorDialog(mentor) {
+      this.requestingMentor = mentor
+      this.requestHourDialog = true
+    },
+
+    filteredDays(days) {
+      return this.daysOfWeek.filter((item) => days.includes(item.value))
+    },
+
     addMentor(mentor) {
       this.unlockData.mentor_data.push({
         mentorId: mentor.id || mentor._id,
@@ -975,8 +1262,16 @@ export default {
         start_hour: '',
         end_hour: '',
       };
+      this.findMentorData = {
+        day: '',
+        start_hour: '',
+        end_hour: '',
+      }
+      this.requestingMentor = {}
+      this.searchStar = ''
       this.mentorList = []
       this.mentorDialog = false;
+      this.requestHourDialog = false;
       this.requestMentorDialog = false;
     },
 
@@ -991,8 +1286,9 @@ export default {
       }
     },
 
-    showMentor(mentor) {
-      this.showingMentor = { ...mentor }
+    showMentor(shift) {
+      this.showingMentor = { ...shift.mentor }
+      this.showingMentorShift = { ...shift }
       this.$refs.showMentorModal.click()
     },
 
@@ -1147,5 +1443,10 @@ export default {
 }
 .el-table .cell {
   word-break: keep-all;
+}
+.rating-mentor {
+  .el-rate__icon {
+    font-size: 50px !important;
+  }
 }
 </style>
