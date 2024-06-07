@@ -78,13 +78,13 @@
                 <li class="border-bottom">
                   <NuxtLink
                     class="dropdown-item"
-                    :to="localePath('/jobs/favorites', $i18n.locale)"
-                    :class="{ chosen: $route.path == localePath('/jobs/favorites', $i18n.locale) }">
+                    :to="localePath('/educations/', $i18n.locale)"
+                    :class="{ chosen: $route.path == localePath('/educations/', $i18n.locale) }">
                     <img
                       class=""
                       src="../assets/images/users/icon_favorite.svg"
                     />
-                    {{ $t('general.favoriteJobs') }}
+                    Chương trình đào tạo
                   </NuxtLink>
                 </li>
                 <li>

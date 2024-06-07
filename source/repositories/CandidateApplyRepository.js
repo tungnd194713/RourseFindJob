@@ -45,5 +45,8 @@ export default ($axios) => ({
   },
   getAnswerSheetById(answerSheetId) {
     return $axios.put(`/users/educations/sheets/${answerSheetId}`);
+  },
+  updateModuleLog(body) {
+    return $axios.post(`/course/module-log`, body);
   }
 })

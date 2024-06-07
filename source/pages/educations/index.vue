@@ -569,6 +569,7 @@
               width="50">
             </el-table-column>
             <el-table-column prop="mentor_name" label="Tên mentor"></el-table-column>
+            <el-table-column prop="facebook_link" width="200px" label="Kênh liên lạc chính"></el-table-column>
             <el-table-column prop="numModules" label="Đánh giá">
               <template slot-scope="scope">
                 <div>
@@ -788,6 +789,7 @@
               width="50">
             </el-table-column>
             <el-table-column prop="mentor_name" label="Tên mentor"></el-table-column>
+            <el-table-column prop="facebook_link" label="Kênh liên lạc chính"></el-table-column>
             <el-table-column prop="numModules" label="Đánh giá">
               <template slot-scope="scope">
                 <div>

@@ -19,8 +19,8 @@ export default [
     tab: 'favorite',
     srcImage: '/ic_heart.svg',
     srcImageActive: '/ic_heart_active_header.svg',
-    name: 'Việc làm yêu thích',
-    path: '/jobs/favorites',
-    localeId: 'general.favoriteJobs',
+    name: 'Chương trình đào tạo',
+    path: '/educations/',
+    localeId: 'general.educations',
   }
 ]

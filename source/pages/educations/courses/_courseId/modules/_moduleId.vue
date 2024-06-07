@@ -189,6 +189,8 @@ export default {
       videoDuration: 0,
       currentInterval: 0,
       isModuleWatched: false,
+      logId: '',
+      intervalId: null,
     }
   },
   computed: {
@@ -257,15 +259,23 @@ export default {
       //   };
       //   vm.websocket.send(JSON.stringify(updateData));
       // }
+
       this.player.on('play', function() {
         // updateProgress();
         // this.updateIntervalId = setInterval(updateProgress, 2000);
         if (!vm.isModuleWatched) {
           vm.watchedModule()
         }
+        vm.logId = vm.generateLogId()
+        vm.moduleLog(self.player.currentTime());
+        vm.intervalId = setInterval(async () => {
+          const currentVideoTime = self.player.currentTime()
+          await vm.moduleLog(currentVideoTime);
+        }, 3000)
       });
       this.player.on('pause', function() {
-        clearInterval(this.updateIntervalId);
+        // clearInterval(this.updateIntervalId);
+        clearInterval(vm.intervalId)
       });
 
       this.player.on('timeupdate', function() {
@@ -305,6 +315,25 @@ export default {
     clearInterval(this.currentInterval)
   },
   methods: {
+    generateLogId() {
+      // Generate timestamp part (8 characters)
+      const timestamp = Math.floor(Date.now() / 1000).toString(16).padStart(8, '0');
+
+      // Generate random part (16 characters)
+      const randomPart = [...Array(16)].map(() => Math.floor(Math.random() * 16).toString(16)).join('');
+
+      // Concatenate timestamp and random part
+      return timestamp + randomPart;
+    },
+    async moduleLog(currentTime) {
+      const body = {
+        logId: this.logId,
+        module: this.modules.id || this.modules._id,
+        video_start_time: currentTime,
+        video_update_time: currentTime,
+      }
+      await this.$repositories.candidatesApply.updateModuleLog(body);
+    },
     formattedCurrentTime(value) {
       const pad = function(input) {return (input < 10) ? "0" + input : input;};
       return [

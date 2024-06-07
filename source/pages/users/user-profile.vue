@@ -1667,8 +1667,8 @@ export default {
           }
         ).then(res => {
           if (res.status === 200) {
-            this.previewProfileImageUrl = res.data.profile_image
-            this.candidate.profile_image = res.data.profile_image
+            this.previewProfileImageUrl = res.data
+            this.candidate.profile_image = res.data
             this.$auth.fetchUser()
             this.$toast.success(this.$t('user_profile.upload_profile_image_success'))
           }
