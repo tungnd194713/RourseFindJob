@@ -246,6 +246,7 @@ export default {
         if(self.player?.currentTime() > currentTime && self.player?.currentTime() > markedTime) {
           self.player?.currentTime(currentTime);
         }
+        self.player.pause();
       });
 
       // function updateProgress() {
