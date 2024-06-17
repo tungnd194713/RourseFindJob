@@ -358,7 +358,7 @@
                   </tr>-->
                 </table>
               </el-tab-pane>
-              <el-tab-pane label="Lộ trình của bạn" name="second">
+              <el-tab-pane :label="userJobPoint === null ? 'Lộ trình (Chưa tạo profile)' : 'Lộ trình của bạn'" name="second" :disabled="userJobPoint === null">
                 <h3 class="fw-bold mt-4 mb-4">Đánh giá độ phù hợp:</h3>
                 <el-table :data="matchingPointData" style="width: 100%">
                   <el-table-column prop="jobRequirement" label="Yêu cầu" :min-width="40">
@@ -771,6 +771,7 @@ export default {
               ]
           },
       ],
+      userJobPoint: null,
       tabModel: 'first',
       checkApply: true,
       isShowAlertLogin: true,
@@ -896,6 +897,7 @@ export default {
 
       if (!data.errors) {
         this.checkApply = data.checkApply
+        this.userJobPoint = data.user_job_point;
         this.items = data
         this.datas = data.needToLearnCourses.map((item, index) => {
           return {

@@ -14,15 +14,15 @@
     </div>
     <div class="form_signup" :class="{ extraLong: error }">
         <div class="text-content d-flex justify-content-center title_form_signup">
-            {{ $t('general.signup') }}
+            {{ "Đăng ký" }}
         </div>
         <div v-if="error && errorShow" class="alert alert-danger mt-3 text-center" role="alert">
-            {{ $t(error) }}
+            Có lỗi xảy ra
         </div>
 
             <div>
               <div class="firstname">
-                <div class="text">{{ $t('signup_page.username') }}
+                <div class="text">Tên người dùng
                   <p>*</p>
                 </div>
                 <img src="../assets/images/ic_user.svg" alt="">
@@ -34,16 +34,16 @@
               </div>
               <div v-if="$v.user.name.$error" class="errorContain">
                   <div v-if="!$v.user.name.required" class="errorMsg someMore">
-                      {{ $t('error_text.required') }}
+                      Trường này là bắt buộc
                   </div>
                   <div v-if="!$v.user.name.maxLength" class="errorMsg someMore">
-                      {{ $t('error_text.less_than_50_characters') }}
+                      Trường này phải ít hơn 50 ký tự
                   </div>
               </div>
             </div>
         <div>
           <div class="email">
-            <div class="text-email">{{ $t('login_page.mail') }}<p>*</p></div>
+            <div class="text-email">Email<p>*</p></div>
             <img class="ic_mail" src="../assets/images/ic_mail.svg"  alt="">
             <div class="line"></div>
             <input v-model.trim="user.email"
@@ -55,16 +55,16 @@
           </div>
           <div v-if="$v.user.email.$error" class="errorContain">
             <div v-if="!$v.user.email.required" class="errorMsg someMore">
-                {{ $t('error_text.required') }}
+                Trường này là bắt buộc
             </div>
             <div v-if="!$v.user.email.email" class="errorMsg someMore">
-                {{ $t('error_text.is_not_email_format') }}
+                Trường này phải nhập dạng email
             </div>
           </div>
         </div>
         <div>
           <div class="password">
-            <div class="text-password">{{ $t('login_page.password') }}<p>*</p></div>
+            <div class="text-password">Password<p>*</p></div>
             <img  class="ic_lock" src="../assets/images/ic_lock.svg"  alt="">
             <div class="line"></div>
             <input v-model.trim="user.password"
@@ -91,15 +91,15 @@
           </div>
           <div v-if="$v.user.password.$error" class="errorContain">
             <div v-if="!$v.user.password.required" class="errorMsg someMore">
-                {{ $t('error_text.required') }}
+                Trường này là bắt buộc
             </div>
             <div v-if="!$v.user.password.minLength || !$v.user.password.maxLength" class="errorMsg someMore">
-                {{ $t('error_text.is_not_password_format') }}
+                Vui lòng nhập mật khẩu từ 6-32 ký tự
             </div>
           </div>
         </div>
 
-        <div class="agree d-flex align-middle">
+        <!-- <div class="agree d-flex align-middle">
             <input v-model="acceptTerms"
                    type="checkbox"
                    value="0"
@@ -107,21 +107,21 @@
                    @blur="$v.acceptTerms.$touch()">
           <span v-if="$i18n.locale === 'vi'" class="align-middle">{{ $t('general.toi_dong_y_voi') }}&nbsp;<NuxtLink :to="localePath('/term-use', $i18n.locale)">{{ $t('general.terms') }}</NuxtLink>&nbsp;{{ $t('general.and') }}&nbsp;<NuxtLink :to="localePath('/privacy-policy', $i18n.locale)">{{ $t('general.policy') }}</NuxtLink></span>
           <span v-else class="align-middle"><NuxtLink :to="localePath('/term-use', $i18n.locale)">{{ $t('general.terms') }}</NuxtLink>&nbsp;{{ $t('general.and') }}&nbsp;<NuxtLink :to="localePath('/privacy-policy', $i18n.locale)">{{ $t('general.policy') }}</NuxtLink>&nbsp;{{ $t('general.toi_dong_y_voi') }}</span>
-        </div>
-        <div v-if="$v.acceptTerms.$error" class="errorContain">
+        </div> -->
+        <!-- <div v-if="$v.acceptTerms.$error" class="errorContain">
           <div class="errorMsg someMore towLine">
               {{ $t('error_text.check_term_user_privacy_policy') }}
           </div>
-        </div>
+        </div> -->
         <div class="signCon">
             <div
               id="btn_login"
               class="btn fw-bold my-3 my-lg-4 rounded-pill"
               @click="goBack"
             >
-                {{ $t('general.back') }}
+                Quay lại
             </div>
-            <button class="signup" type="submit" @click="hidePage = true">{{ $t('signup_page.signup') }}</button>
+            <button class="signup" type="submit" @click="hidePage = true">Đăng ký</button>
         </div>
     </div>
   </form>
@@ -143,9 +143,10 @@ export default {
         user: {
           name: '',
           email: '',
-          password: ''
+          password: '',
+          role: 'user',
         },
-        acceptTerms: 0,
+        acceptTerms: true,
         errors: [],
         messages: '',
         isHide: true,

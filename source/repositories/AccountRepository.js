@@ -1,4 +1,4 @@
-const resource = '/users'
+const resource = '/auth'
 
 export default ($axios) => ({
   forgotPassword(payload) {
