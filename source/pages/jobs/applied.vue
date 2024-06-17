@@ -146,12 +146,6 @@
                   </span>
               </div> -->
               <div>Trạng thái: {{ jobStatus[item.status - 1] }}</div>
-              <div v-if="item.status === 3">
-                <el-button type="primary" @click="startEducation(item)">Bắt đầu đào tạo</el-button>
-              </div>
-              <div v-else-if="item.status === 4">
-                <el-button type="warning" @click="$router.push(localePath(`/educations`))">Đang đào tạo - 70%</el-button>
-              </div>
             </div>
           </div>
         </div>

@@ -330,6 +330,7 @@ export default {
       const body = {
         logId: this.logId,
         module: this.modules.id || this.modules._id,
+        course: this.$route.params.courseId,
         video_start_time: currentTime,
         video_update_time: currentTime,
       }

@@ -10,6 +10,12 @@ export default ($axios) => ({
   startEducation(candidateApplyId) {
     return $axios.post(`${resource}/${candidateApplyId}/start-education`);
   },
+  getUserRoadmapList() {
+    return $axios.get(`/users/educations/list`);
+  },
+  getRoadmapDetail(roadmapId) {
+    return $axios.get(`/users/educations/detail/` + roadmapId);
+  },
   getCurrentEducation() {
     return $axios.get(`/users/educations/current`);
   },
