@@ -185,7 +185,7 @@
         };
         console.log(this.userChoices)
         try {
-            const { data: { answerSheet: savedSheet, testKey } } = await this.$repositories.candidatesApply.submitAnswerSheet(this.$route.params.courseId, this.answerSheet.id || this.answerSheet._id, sheetBody);
+            const { data: { answerSheet: savedSheet, testKey } } = await this.$repositories.candidatesApply.submitAnswerSheet(this.$route.params.educationId, this.$route.params.courseId, this.answerSheet.id || this.answerSheet._id, sheetBody);
             if (isFinished) {
               this.key = testKey;
               this.finishedAt = Date.parse(savedSheet.finishedAt);

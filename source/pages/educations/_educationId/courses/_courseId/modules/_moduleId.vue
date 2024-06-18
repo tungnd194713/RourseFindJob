@@ -354,7 +354,7 @@ export default {
       }
     },
     async getCourse() {
-      const { data } = await this.$repositories.candidatesApply.getUserModule(this.$route.params.courseId, this.$route.params.moduleId)
+      const { data } = await this.$repositories.candidatesApply.getUserModule(this.$route.params.educationId, this.$route.params.courseId, this.$route.params.moduleId)
       this.modules = {...data.moduleData};
       this.notes = [...data.noteList];
       this.discussionList = [...data.discussion];
@@ -370,7 +370,7 @@ export default {
       }
     },
     async watchedModule() {
-      const { data } = await this.$repositories.candidatesApply.watchedModule(this.$route.params.courseId, this.$route.params.moduleId);
+      const { data } = await this.$repositories.candidatesApply.watchedModule(this.$route.params.educationId, this.$route.params.courseId, this.$route.params.moduleId);
       if (data) {
         this.isModuleWatched = true;
         this.$toast.error(data)

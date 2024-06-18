@@ -1193,7 +1193,7 @@ export default {
         request_mentor: this.unlockData.request_mentor,
         mentor_data: JSON.stringify(this.unlockData.mentor_data)
       }
-      const { data } = await this.$repositories.candidatesApply.unlockCourse(this.unlockingCourse._id || this.unlockingCourse.id, unlockParams);
+      const { data } = await this.$repositories.candidatesApply.unlockCourse(this.$route.params._id, this.unlockingCourse._id || this.unlockingCourse.id, unlockParams);
       if (data) {
         this.getDetailJob();
         this.$toast.success('Đã mở khóa khóa học ' + this.unlockingCourse.title)

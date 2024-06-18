@@ -19,14 +19,14 @@ export default ($axios) => ({
   getCurrentEducation() {
     return $axios.get(`/users/educations/current`);
   },
-  getUserModule(courseId, moduleId) {
-    return $axios.get(`/users/educations/courses/${courseId}/modules/${moduleId}`);
+  getUserModule(roadmapId, courseId, moduleId) {
+    return $axios.get(`/users/educations/${roadmapId}/courses/${courseId}/modules/${moduleId}`);
   },
-  watchedModule(courseId, moduleId) {
-    return $axios.get(`/users/educations/courses/${courseId}/modules/${moduleId}/watched`);
+  watchedModule(roadmapId, courseId, moduleId) {
+    return $axios.get(`/users/educations/${roadmapId}/courses/${courseId}/modules/${moduleId}/watched`);
   },
-  unlockCourse(courseId, data) {
-    return $axios.post(`/users/educations/courses/${courseId}/unlock`, data);
+  unlockCourse(roadmapId, courseId, data) {
+    return $axios.post(`/users/educations/${roadmapId}/courses/${courseId}/unlock`, data);
   },
   requestMentor(courseId, data) {
     return $axios.post(`/users/educations/courses/${courseId}/request-mentors`, data);
@@ -40,8 +40,8 @@ export default ($axios) => ({
   getUserAnswerSheet(courseId, testId) {
     return $axios.get(`/users/educations/courses/${courseId}/tests/${testId}/sheets`);
   },
-  submitAnswerSheet(courseId, answerSheetId, body) {
-    return $axios.put(`/users/educations/courses/${courseId}/sheets/${answerSheetId}/submit`, body);
+  submitAnswerSheet(roadmapId, courseId, answerSheetId, body) {
+    return $axios.put(`/users/educations/${roadmapId}/courses/${courseId}/sheets/${answerSheetId}/submit`, body);
   },
   createAnswerSheet(testId, body) {
     return $axios.post(`/users/educations/tests/${testId}/sheets/create`, body);
