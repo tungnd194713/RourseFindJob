@@ -10,6 +10,9 @@ export default ($axios) => ({
   startEducation(candidateApplyId) {
     return $axios.post(`${resource}/${candidateApplyId}/start-education`);
   },
+  refuseEducation(candidateApplyId) {
+    return $axios.post(`${resource}/${candidateApplyId}/refuse-education`);
+  },
   getUserRoadmapList() {
     return $axios.get(`/users/educations/list`);
   },
@@ -19,8 +22,11 @@ export default ($axios) => ({
   getCurrentEducation() {
     return $axios.get(`/users/educations/current`);
   },
-  getUserModule(roadmapId, courseId, moduleId) {
-    return $axios.get(`/users/educations/${roadmapId}/courses/${courseId}/modules/${moduleId}`);
+  checkJobEducationExisted() {
+    return $axios.get(`/users/educations/check-roadmap`);
+  },
+  getUserModule(courseId, moduleId) {
+    return $axios.get(`/users/educations/courses/${courseId}/modules/${moduleId}`);
   },
   watchedModule(roadmapId, courseId, moduleId) {
     return $axios.get(`/users/educations/${roadmapId}/courses/${courseId}/modules/${moduleId}/watched`);

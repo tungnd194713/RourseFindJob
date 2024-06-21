@@ -145,10 +145,50 @@
                     <img src="../../assets/images/users/icon_collapse.svg" alt="">
                   </span>
               </div> -->
-              <div>Trạng thái: {{ jobStatus[item.status - 1] }}</div>
+              <div class="mb-3">Trạng thái: {{ jobStatus[item.status - 1] }}</div>
+              <div v-if="item.status === 3" class="d-flex">
+                <el-button style="margin-right: 6px" type="primary" @click="startEducation(item)">Bắt đầu học</el-button>
+                <el-button style="margin-left: 6px" type="danger" @click="refuseEducation(item)">Từ chối học</el-button>
+              </div>
             </div>
           </div>
         </div>
+        <el-dialog
+          title="Cảnh báo"
+          :visible.sync="warningDialog"
+          width="50%"
+          :before-close="handleClose"
+        >
+          <el-alert
+            title="Đã học chương trình khác"
+            type="warning"
+            description="Bạn đang tham gia học một chương trình đào tạo cho vị trí khác, bạn có chắc muốn tham gia học chương trình đào tạo này?"
+            show-icon
+          >
+          </el-alert>
+          <span slot="footer" class="dialog-footer">
+            <el-button @click="warningDialog = false">Hủy</el-button>
+            <el-button type="warning" @click="confirmAction">Vẫn tham gia</el-button>
+          </span>
+        </el-dialog>
+        <el-dialog
+          title="Từ chối học"
+          :visible.sync="warningRefuseDialog"
+          width="50%"
+          :before-close="handleClose"
+        >
+          <el-alert
+            title="Từ chối tham gia học tập"
+            type="warning"
+            description="Bạn có chắc muốn từ chối tham gia chương trình đào tạo này?"
+            show-icon
+          >
+          </el-alert>
+          <span slot="footer" class="dialog-footer">
+            <el-button @click="warningRefuseDialog = false">Hủy</el-button>
+            <el-button type="warning" @click="confirmRefuseAction">Từ chối tham gia</el-button>
+          </span>
+        </el-dialog>
         <Pagination
           :current-page="currentPage"
           :per-page="perPage"
@@ -194,7 +234,11 @@ export default {
       hidePage: false,
       month: 2,
       theCareers,
-      jobStatus
+      jobStatus,
+      confirmItemId: null,
+      warningDialog: false,
+      warningRefuseDialog: false,
+      confirmRefuseId: null,
     }
   },
 
@@ -235,10 +279,27 @@ export default {
       }
     },
     async startEducation(item) {
-      const { data } = await this.$repositories.candidatesApply.startEducation(item.id);
+      this.confirmItemId = item.id
+      const { data } = await this.$repositories.candidatesApply.checkJobEducationExisted();
+      if (data) {
+        this.warningDialog = true
+      }
+    },
+    async confirmAction() {
+      const { data } = await this.$repositories.candidatesApply.startEducation(this.confirmItemId);
       if (data) {
         this.$router.push(this.localePath(`/educations`))
         this.$toast.success('Bắt đầu quá trình học tập!')
+      }
+    },
+    refuseEducation(item) {
+      this.confirmRefuseId = item.id
+      this.warningRefuseDialog = true
+    },
+    async confirmRefuseAction() {
+      const { data } = await this.$repositories.candidatesApply.refuseEducation(this.confirmRefuseId);
+      if (data) {
+        this.$toast.success('Đã từ chối tham gia học tập!')
       }
     },
     pageChangeHandle(value) {
