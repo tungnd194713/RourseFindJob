@@ -287,7 +287,6 @@
     "login_failed_verified_email": "このメールアドレスは検証されていません",
     "is_not_password_format": "6文字以上32文字以下で入力してください",
     "please_wait_try_again" : "しばらくお待ちください",
-    "check_term_user_privacy_policy": "これは必須項目なので、必ずチェックしてください",
     "less_than_50_characters": "50文字以下で入力してください",
     "email_has_been_verified": "このメールアドレスは登録されています。",
     "send_email_signup": "メールアドレスに確認用のリンクを再送信しました。",

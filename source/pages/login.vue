@@ -109,11 +109,6 @@
         <div class="register">
           <ul class="d-flex list-link">
             <li>
-              <NuxtLink :to="localePath('/can-not-login', $i18n.locale)" class="text-decoration-none"
-              >{{ $t('login_page.can_not_login') }}</NuxtLink>
-            </li>
-            <div class="dot-link">•</div>
-            <li>
               <NuxtLink class="text-decoration-none" :to="localePath('/signup', $i18n.locale)">{{ $t('login_page.not_have_account') }}</NuxtLink>
             </li>
           </ul>

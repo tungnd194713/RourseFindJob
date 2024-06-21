@@ -98,21 +98,6 @@
             </div>
           </div>
         </div>
-
-        <!-- <div class="agree d-flex align-middle">
-            <input v-model="acceptTerms"
-                   type="checkbox"
-                   value="0"
-                   @input="$v.acceptTerms.$touch()"
-                   @blur="$v.acceptTerms.$touch()">
-          <span v-if="$i18n.locale === 'vi'" class="align-middle">{{ $t('general.toi_dong_y_voi') }}&nbsp;<NuxtLink :to="localePath('/term-use', $i18n.locale)">{{ $t('general.terms') }}</NuxtLink>&nbsp;{{ $t('general.and') }}&nbsp;<NuxtLink :to="localePath('/privacy-policy', $i18n.locale)">{{ $t('general.policy') }}</NuxtLink></span>
-          <span v-else class="align-middle"><NuxtLink :to="localePath('/term-use', $i18n.locale)">{{ $t('general.terms') }}</NuxtLink>&nbsp;{{ $t('general.and') }}&nbsp;<NuxtLink :to="localePath('/privacy-policy', $i18n.locale)">{{ $t('general.policy') }}</NuxtLink>&nbsp;{{ $t('general.toi_dong_y_voi') }}</span>
-        </div> -->
-        <!-- <div v-if="$v.acceptTerms.$error" class="errorContain">
-          <div class="errorMsg someMore towLine">
-              {{ $t('error_text.check_term_user_privacy_policy') }}
-          </div>
-        </div> -->
         <div class="signCon">
             <div
               id="btn_login"

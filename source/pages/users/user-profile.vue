@@ -41,21 +41,6 @@
               </div>
               <div class="error-text">{{ profileImageErrors[0] }}</div>
             </div>
-            <!-- <div class="link-contain justify-content-center">
-              <input
-                ref="affiliateLinkInput"
-                type="text"
-                name="your-link"
-                :value="base_url + '/users/' + loggedInUser.recommend_code"
-                readonly
-                class="cursor-pointer affiliate-link-input"
-                @click="copyAffiliateLink"
-              />
-            </div>
-            <div class="ps">
-              <span class="fst-italic fw-bold">{{ $t('user_profile.notice') }}</span>
-              {{ $t('user_profile.notice_content') }}
-            </div> -->
           </div>
           <div class="cv-upload-contain">
             <div class="cv-tit">{{ $t('user_profile.upload_cv') }}</div>

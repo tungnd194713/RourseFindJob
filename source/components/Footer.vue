@@ -32,14 +32,6 @@
         <div class="col-6 col-lg-3 mb-2">
           <h5 class="fw-bold text-yell">{{ $t('general.rules') }}</h5>
           <div class="my-2 my-lg-3 line-title"></div>
-          <ul class="nav flex-column">
-            <li class="nav-item mb-1">
-              <NuxtLink :to="localePath('/term-use', $nuxt.$i18n.locale)" class="nav-link p-0">{{ $t('general.terms') }}</NuxtLink>
-            </li>
-            <li class="nav-item mb-1">
-              <NuxtLink :to="localePath('/privacy-policy', $nuxt.$i18n.locale)" class="nav-link p-0">{{ $t('general.policy') }}</NuxtLink>
-            </li>
-          </ul>
         </div>
         <div class="col-12 col-lg-3">
           <h5 class="fw-bold text-yell">{{ $t('general.social') }}</h5>

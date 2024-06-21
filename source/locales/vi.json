@@ -291,7 +291,6 @@
     "login_failed_verified_email": "Mail của bạn chưa được xác nhận",
     "is_not_password_format": "Vui lòng nhập mật khẩu từ 6-32 ký tự",
     "please_wait_try_again" : "Vui lòng chờ trước khi thử lại",
-    "check_term_user_privacy_policy": "Hãy đồng ý với Điều khoản sử dụng và Chính sách bảo mật",
     "less_than_50_characters": "Vui lòng nhập ít hơn 50 ký tự",
     "email_has_been_verified": "Địa chỉ email này đã được đăng ký và xác minh",
     "send_email_signup": "Liên kết xác nhận đã được gửi lại đến địa chỉ email.",

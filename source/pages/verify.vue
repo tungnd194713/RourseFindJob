@@ -64,7 +64,6 @@
             </div>
           </div>
           <div class="submit-btn d-flex justify-content-center">
-            <NuxtLink class="goBack" :to="localePath('/can-not-login', $i18n.locale)">{{ $t('general.back') }}</NuxtLink>
             <button type="submit" class="send">{{ $t('general.send') }}</button>
           </div>
         </div>
