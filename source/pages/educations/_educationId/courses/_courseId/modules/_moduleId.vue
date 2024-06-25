@@ -3,7 +3,7 @@
     <div class="container">
       <div class="card">
         <h3 class="mb-4 pb-4" style="border-bottom: 2px solid gray">
-          {{ userRoadmap.title }} > {{ course.title }} > {{ modules.name }}
+          <span style="cursor: pointer" @click="$router.push(localePath('/educations/' + $route.params.educationId, $i18n.locale))">{{ userRoadmap.title }}</span> > {{ course.title }} > {{ modules.name }}
         </h3>
         <div class="video-container">
           <video id="video-player" ref="videoPlayer" :class="{'no-pointer': isStop}" class="video-js vjs-default-skin" height="400"></video>
@@ -23,16 +23,16 @@
             </div>
           </div>
         </div>
-        <el-tabs type="card" v-model="activeName" class="discussion-section">
+        <!-- <el-tabs type="card" v-model="activeName" class="discussion-section">
           <el-tab-pane label="Note" name="note">
             <el-card>
               <div slot="header" class="note-header">Notes</div>
-              <!-- <el-list>
+              <el-list>
                 <el-list-item v-for="note in notes" :key="note.id">
                   <el-button type="info" round @click="toVideoTime(note.noted_video_time)">{{ formattedCurrentTime(note.noted_video_time) }}</el-button>
                   <div class="note-content">{{ note.content }}</div>
                 </el-list-item>
-              </el-list> -->
+              </el-list>
               <el-form v-if="player" class="note-form">
                 <el-button type="info" round>{{ formattedCurrentTime(player.currentTime()) }}</el-button>
                 <el-form-item>
@@ -44,7 +44,7 @@
                   ></el-input>
                 </el-form-item>
                 <el-form-item>
-                  <!-- <el-button type="primary" @click="takeNote">{{noteButton}}</el-button> -->
+                  <el-button type="primary" @click="takeNote">{{noteButton}}</el-button>
                 </el-form-item>
               </el-form>
             </el-card>
@@ -141,7 +141,7 @@
               </div>
             </div>
           </el-tab-pane>
-        </el-tabs>
+        </el-tabs> -->
       </div>
     </div>
   </main>
@@ -373,7 +373,6 @@ export default {
       const { data } = await this.$repositories.candidatesApply.watchedModule(this.$route.params.educationId, this.$route.params.courseId, this.$route.params.moduleId);
       if (data) {
         this.isModuleWatched = true;
-        this.$toast.error(data)
       }
     },
     // async takeNote() {

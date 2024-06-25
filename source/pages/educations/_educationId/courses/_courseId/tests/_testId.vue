@@ -77,7 +77,7 @@ export default {
   methods: {
     async getTest() {
       try {
-        const { data } = await this.$repositories.candidatesApply.getTestById(this.$route.params.courseId, this.$route.params.testId);
+        const { data } = await this.$repositories.candidatesApply.getTestById(this.$route.params.educationId, this.$route.params.courseId, this.$route.params.testId);
         this.test = data.test;
         this.userRoadmap = data.userRoadmap;
         this.course = data.course

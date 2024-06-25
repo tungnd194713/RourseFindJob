@@ -25,20 +25,6 @@
           <div class="d-md-flex">
             <div class="align-items-center job-img-contain">
               <div class="job-img mb-3 mb-md-0">
-                <!-- <img
-                  v-if="item.job.favorites.length != 0"
-                  src="../../assets/images/users/draft/red-heart.svg"
-                  alt="heart"
-                  style="z-index: 99"
-                  @click="deleteFavoriteJobs(item.job.favorites[0].id)"
-                />
-                <img
-                  v-else
-                  src="../../assets/images/users/draft/heart.svg"
-                  alt="heart"
-                  style="z-index: 99"
-                  @click="postFavoriteJobs(item.job.id)"
-                /> -->
                 <img v-if="item.job.image_job"
                      :src="url_api_file + item.job.image_job"
                      :alt="'image-' + item.job.id"
@@ -156,14 +142,15 @@
         <el-dialog
           title="Cảnh báo"
           :visible.sync="warningDialog"
-          width="50%"
+          width="55%"
           :before-close="handleClose"
         >
           <el-alert
-            title="Đã học chương trình khác"
+            title="Đang học chương trình khác"
             type="warning"
             description="Bạn đang tham gia học một chương trình đào tạo cho vị trí khác, bạn có chắc muốn tham gia học chương trình đào tạo này?"
             show-icon
+            :closable="false"
           >
           </el-alert>
           <span slot="footer" class="dialog-footer">
@@ -179,14 +166,14 @@
         >
           <el-alert
             title="Từ chối tham gia học tập"
-            type="warning"
+            type="error"
             description="Bạn có chắc muốn từ chối tham gia chương trình đào tạo này?"
             show-icon
           >
           </el-alert>
           <span slot="footer" class="dialog-footer">
             <el-button @click="warningRefuseDialog = false">Hủy</el-button>
-            <el-button type="warning" @click="confirmRefuseAction">Từ chối tham gia</el-button>
+            <el-button type="danger" @click="confirmRefuseAction">Từ chối tham gia</el-button>
           </span>
         </el-dialog>
         <Pagination
@@ -288,7 +275,7 @@ export default {
     async confirmAction() {
       const { data } = await this.$repositories.candidatesApply.startEducation(this.confirmItemId);
       if (data) {
-        this.$router.push(this.localePath(`/educations`))
+        this.$router.push(this.localePath(`/educations/${data}`))
         this.$toast.success('Bắt đầu quá trình học tập!')
       }
     },
@@ -312,40 +299,6 @@ export default {
           break
         default:
           this.currentPage = value
-      }
-      this.getAppliedJobs(this.currentPage)
-    },
-    async postFavoriteJobs(payload) {
-      try {
-        await this.$repositories.jobs
-          .postFavoriteJobs({
-            job_id: payload,
-          })
-          .then((res) => {
-            if (res.status === 201) {
-              this.$toast.success(this.$t('general.addJobToFavoriteListSuccess'))
-            } else {
-              this.$toast.error(this.$t('general.inactive'))
-            }
-          })
-      } catch (e) {
-        this.errors = e.response.data.errors
-      }
-      this.getAppliedJobs(this.currentPage)
-    },
-    async deleteFavoriteJobs(payload) {
-      try {
-        await this.$repositories.jobs
-          .deleteFavoriteJobs(payload)
-          .then((res) => {
-            if (res.status === 204) {
-              this.$toast.success(this.$t('general.removeJobFromFavoriteListSuccess'))
-            } else {
-              this.$toast.error(this.$t('general.inactive'))
-            }
-          })
-      } catch (e) {
-        this.errors = e.response.data.errors
       }
       this.getAppliedJobs(this.currentPage)
     },

@@ -8,6 +8,14 @@ export default [
     localeId: 'general.myProfile',
   },
   {
+    tab: 'list',
+    srcImage: '/ic_apply_job.svg',
+    srcImageActive: '/ic_apply_job_active_header.svg',
+    name: 'Danh sách công việc',
+    path: '/jobs',
+    localeId: 'general.listJob',
+  },
+  {
     tab: 'apply',
     srcImage: '/ic_apply_job.svg',
     srcImageActive: '/ic_apply_job_active_header.svg',

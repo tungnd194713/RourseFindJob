@@ -56,18 +56,6 @@
               <div class="align-items-center">
                 <div class="job-img mb-3 mb-md-0">
                   <img
-                    v-if="job.favorites.length != 0"
-                    src="../../../assets/images/users/draft/red-heart.svg"
-                    alt="heart"
-                    @click="deleteFavoriteJobs(job.favorites[0].id)"
-                  />
-                  <img
-                    v-else
-                    src="../../../assets/images/users/draft/heart.svg"
-                    alt="heart"
-                    @click="postFavoriteJobs(job.id)"
-                  />
-                  <img
                     v-if="job.image_job"
                     :src="url_api_file + job.image_job"
                     alt=""
@@ -452,40 +440,6 @@ export default {
         this.address_map = '〒' + this.postal_code.slice(0, 3) + '-' + this.postal_code.slice(3) + ' ' + this.$t(this.province) + ' ' + this.district + ' ' + this.address
       else
         this.address_map = this.$t(this.province) + ' ' + this.district + ' ' + this.address
-    },
-    async postFavoriteJobs(payload) {
-      try {
-        await this.$repositories.jobs
-          .postFavoriteJobs({
-            job_id: payload,
-          })
-          .then((res) => {
-            if (res.status === 201) {
-              this.$toast.success(this.$t('general.addJobToFavoriteListSuccess'))
-            } else {
-              this.$toast.success(this.$t('general.inactive'))
-            }
-          })
-      } catch (e) {
-        this.errors = e.response.data.errors
-      }
-      this.getCompanyWithJobs()
-    },
-    async deleteFavoriteJobs(payload) {
-      try {
-        await this.$repositories.jobs
-          .deleteFavoriteJobs(payload)
-          .then((res) => {
-            if (res.status === 204) {
-              this.$toast.success(this.$t('general.removeJobFromFavoriteListSuccess'))
-            } else {
-              this.$toast.success(this.$t('general.inactive'))
-            }
-          })
-      } catch (e) {
-        this.errors = e.response.data.errors
-      }
-      this.getCompanyWithJobs()
     },
     showMore() {
       this.jobNum += 5

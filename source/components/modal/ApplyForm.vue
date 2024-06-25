@@ -76,7 +76,7 @@
                 <label for="cvInSystem">Ứng tuyển trực tiếp</label>
               </div>
 
-              <div style="margin-top: 22px" class="d-flex align-items-center form-cvUpload">
+              <div v-if="educationReady" style="margin-top: 22px" class="d-flex align-items-center form-cvUpload">
                 <input
                   id="cvUpload"
                   v-model="apply.education_applied"
@@ -215,7 +215,11 @@ export default {
     isApplied: {
       type: Boolean,
       default: false,
-    }
+    },
+    educationReady: {
+      type: Boolean,
+      default: false,
+    },
   },
 
   data() {

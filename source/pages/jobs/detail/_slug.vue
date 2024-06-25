@@ -147,20 +147,6 @@
                     height="220px"
                     class="job-ima"
                   />
-                  <img
-                    v-if="isFav"
-                    class="heart"
-                    src="../../../assets/images/users/draft/red-heart.svg"
-                    alt="heart"
-                    @click="deleteFavoriteJobs(items.favorites[0].id)"
-                  />
-                  <img
-                    v-else
-                    class="heart"
-                    src="../../../assets/images/users/draft/heart.svg"
-                    alt="heart"
-                    @click="postFavoriteJobs(items.id)"
-                  />
                 </div>
               </div>
               <div class="col-sm-12 col-md-12 col-lg-6">
@@ -168,9 +154,9 @@
                   <ApplyForm :id="items.id" :title="items.title" :title-vi="items.title_vi"
                              :is-expired="items.date_end" :job-status="items.status" :check-apply="checkApply"
                              :accept-education="items.accept_education" :matching-point="Math.round(items.user_job_point / items.job_point * 100) / 100 * 100"
-                             :education-courses="datas.map((item) => item._id)" :is-applied="items.isApplied"
+                             :education-courses="datas.map((item) => item._id)" :is-applied="items.isApplied" :education-ready="items.educationReady"
                              @applySuccess="handleApplySuccessEvent()" />
-                  <div v-if="items.accept_education" class="d-flex mb-2">
+                  <div v-if="items.educationReady" class="d-flex mb-2">
                     <span style="color: #bc282d"><b>Có thể đào tạo trong {{ items.max_education_month }} tháng <span v-if="items.scholarship > 0">với học bổng {{ items.scholarship }}%</span></b></span>
                   </div>
                   <div class="moneys d-flex align-items-center">
@@ -358,7 +344,7 @@
                   </tr>-->
                 </table>
               </el-tab-pane>
-              <el-tab-pane :label="userJobPoint === null ? 'Lộ trình (Chưa tạo profile)' : 'Lộ trình của bạn'" name="second" :disabled="userJobPoint === null">
+              <el-tab-pane :label="userJobPoint === null ? 'Lộ trình (Chưa tạo profile)' : items.educationReady ? 'Lộ trình của bạn' : 'Đánh giá hồ sơ'" name="second" :disabled="userJobPoint === null">
                 <h3 class="fw-bold mt-4 mb-4">Đánh giá độ phù hợp:</h3>
                 <el-table :data="matchingPointData" style="width: 100%">
                   <el-table-column prop="jobRequirement" label="Yêu cầu" :min-width="40">
@@ -407,7 +393,7 @@
                       <div v-if="scope.row.userProfile.length">
                         <div v-for="(profile, index) in scope.row.userProfile" :key="index">
                           <span v-if="profile.type === 'Certificate'">
-                            Đạt chứng chỉ {{ scope.row.userProfile.certificate.name }}
+                            Đạt chứng chỉ {{ profile.name }}
                           </span>
                           <span v-if="profile.type === 'Major'">
                             Tốt nghiệp đại học chuyên ngành {{ profile.name }}
@@ -437,8 +423,8 @@
                     </template>
                   </el-table-column>
                 </el-table>
-                <h3 class="mb-2 mt-4 fw-bold">Lộ trình đề xuất bởi hệ thống để bạn đạt 100 điểm phù hợp: </h3>
-                <div class="learning-route">
+                <h3 v-if="items.educationReady" class="mb-2 mt-4 fw-bold">Lộ trình khóa học: </h3>
+                <div v-if="items.educationReady" class="learning-route">
                   <div class="container text-center faq-con">
                     <div
                       v-for="data in datas"
@@ -458,7 +444,7 @@
                                         class="col-10 button-title fw-bold"
                                         style="text-align: start; padding-left: 30px"
                                 >
-                                    {{ data.title }} ({{ data.timeCost }} tiếng)
+                                    {{ data.title }} (~ {{ data.estimated_time }} tiếng)
                                 </div>
                                 <div
                                         class="col-2 mid"
@@ -483,179 +469,11 @@
                       </div>
                     </div>
                   </div>
-                  <h3 class="mb-2 mt-4"><span class="fw-bold">Thời gian đào tạo dự kiến: </span><span>2 tháng / ~ 2 tiếng / ngày</span></h3>
+                  <!-- <h3 class="mb-2 mt-4"><span class="fw-bold">Thời gian đào tạo dự kiến: </span><span>2 tháng / ~ 2 tiếng / ngày</span></h3> -->
                   <h3 class="mb-2 mt-4"><span class="fw-bold">Thời gian đào tạo tối đa: </span><span>3 tháng</span></h3>
                 </div>
               </el-tab-pane>
             </el-tabs>
-
-          </div>
-        </div>
-        <div class="col-sm-12 col-md-8 offset-md-4">
-          <div class="propose">
-
-            <div class="propose-job">
-              <h4>{{ $t('job_detail.proposed_work') }}</h4>
-              <div class="see-more" @click="seeMore">
-                {{ $t('job_detail.more') }}
-                <img src="../../../assets/images/users/ic_arrow-right.svg" alt=""/>
-                <img
-                  src="../../../assets/images/users/ic_arrow-right.svg"
-                  alt=""
-                  style="margin-left: -6px"
-                />
-              </div>
-            </div>
-            <h4
-              v-if="proposed_job.length === 0"
-              class="text-center mt-4"
-            >
-              {{ $t('general.noResult') }}
-            </h4>
-            <div v-for="(job, i) in proposed_job" :key="job.id">
-              <div
-                v-if="$moment().isSameOrBefore(job.date_end, 'day')"
-                class="box-content-propose"
-                :class="{
-                  'box-content-propose-last-item': i === proposed_job.length - 1
-                }"
-              >
-                <div class="image-content">
-                  <img
-                    v-if="job.image_job"
-                    :src="url_api_file + job.image_job"
-                    alt=""
-                    width="330px"
-                    height="220px"
-                    class="cursor-pointer job-ima"
-                    @click="routeToJobDetailPage(job)"
-                  />
-                  <img
-                    v-else-if="job.default_image"
-                    :src="require(`@/assets/images/users/draft/career/` + job.default_image)"
-                    alt="" width="330px"
-                    height="220px"
-                    class="cursor-pointer job-ima"
-                    @click="routeToJobDetailPage(job)"
-                  />
-                  <img
-                    v-else
-                    :src="require(`@/assets/images/users/draft` + homeCareers[(job.career - 1)].image)"
-                    alt=""
-                    width="330px"
-                    height="220px"
-                    class="cursor-pointer job-ima"
-                    @click="routeToJobDetailPage(job)"
-                  />
-                  <img
-                    v-if="job.favorites.length != 0"
-                    class="heart"
-                    src="../../../assets/images/users/draft/red-heart.svg"
-                    alt="heart"
-                    @click="deleteFavoriteJobs(job.favorites[0].id)"
-                  />
-                  <img
-                    v-else
-                    class="heart"
-                    src="../../../assets/images/users/draft/heart.svg"
-                    alt="heart"
-                    @click="postFavoriteJobs(job.id)"
-                  />
-                </div>
-                <div class="main-content">
-                  <h4 data-bs-toggle="tooltip"
-                      :title="language == 'jp' ? job.title : job.title_vi"
-                  >
-                    <a
-                      :href="localePath(`/jobs/detail/${job.slug}`, $i18n.locale)"
-                      style="text-decoration: none; color: inherit"
-                      @click.prevent="routeToJobDetailPage(job)"
-                    >
-                      {{ language == 'jp' ? job.title : job.title_vi }}
-                    </a>
-                  </h4>
-                  <div class="moneys d-flex align-items-center">
-                    <img
-                      src="../../../assets/images/users/icon_money_jp_red.svg"
-                      alt=""
-                      width="18px"
-                      height="18px"
-                    />
-                    {{
-                    job.salary_min != 0
-                    ? Math.ceil(job.salary_min)
-                    .toString()
-                    .replace(/\B(?=(\d{3})+(?!\d))/g, ',') + ' -'
-                    : $t('general.upto')
-                    }}
-                    {{
-                    Math.ceil(job.salary_max)
-                    .toString()
-                    .replace(/\B(?=(\d{3})+(?!\d))/g, ',')
-                    }}
-                  </div>
-                  <div class="maps d-flex align-items-center">
-                    <img
-                      src="../../../assets/images/users/icon_map_red.svg"
-                      alt=""
-                      width="18px"
-                      height="18px"
-                    />
-                    {{ $t(provinces[job.province_id]) }}
-                  </div>
-                  <div v-if="language == 'vn'" class="time d-flex align-items-center">
-                    <img
-                      src="../../../assets/images/users/draft/red_calendar.svg"
-                      alt=""
-                      width="18px"
-                      height="18px"
-                    />
-                    {{ $moment(items.date_start).format('DD/MM/YYYY') }} - {{
-                    $moment(items.date_end).format('DD/MM/YYYY') }}
-                  </div>
-                  <div v-else class="time d-flex align-items-center">
-                    <img
-                      src="../../../assets/images/users/draft/red_calendar.svg"
-                      alt=""
-                      width="18px"
-                      height="18px"
-                    />
-                    {{ job.date_start.replaceAll('-', '/') }} - {{ job.date_end.replaceAll('-', '/') }}
-                  </div>
-                  <div class="workplace d-flex flex-wrap">
-                    <div v-if="job.form_recruitment !== 5" class="staff">
-                      {{ getFormRecruitment(job.form_recruitment) }}
-                    </div>
-                    <div
-                      v-if="job.career !== careers.length"
-                      class="nursing"
-                    >
-                      {{ $t(careers[job.career - 1]) }}
-                    </div>
-                  </div>
-                  <!-- <div class="d-flex flex-wrap">
-                    <div
-                      v-for="(stay_status, index) in job.status_stay.split(',')"
-                      v-show="indexCon.includes(index) || showByIndex.includes(i)"
-                      :key="index"
-                      class="skill m-skill"
-                    >
-                      {{ $t(status_stay[parseInt(stay_status)]) }}
-                    </div>
-                    <div v-if="job.status_stay.split(',').length > 3 && !showByIndex.includes(i)"
-                         class="toggleStatusMini" @click="toggleStatus(i)">
-                      {{ more }}
-                      <img src="../../../assets/images/users/icon_more.svg" alt="">
-                    </div>
-                    <div v-if="job.status_stay.split(',').length > 3 && showByIndex.includes(i)"
-                         class="toggleStatusMini" @click="toggleStatus(i)">
-                      {{ collapse }}
-                      <img src="../../../assets/images/users/icon_collapse.svg" alt="">
-                    </div>
-                  </div> -->
-                </div>
-              </div>
-            </div>
           </div>
         </div>
         <StatusStayInfoModal/>
@@ -899,24 +717,26 @@ export default {
         this.checkApply = data.checkApply
         this.userJobPoint = data.user_job_point;
         this.items = data
-        this.datas = data.needToLearnCourses.map((item, index) => {
-          return {
-            ...item,
-            isShown: false,
-            class: 'about-' + index,
-          }
-        })
+        if (this.items.educationReady) {
+          this.datas = data.needToLearnCourses.map((item, index) => {
+            return {
+              ...item,
+              isShown: false,
+              class: 'about-' + index,
+            }
+          })
+        }
         this.matchingPointData = data?.job_matching_data
-        // this.company_id = data.company.id
-        // this.company_name = data.company.company_name
-        // this.manager_name = data.company.manager_name
-        // this.number_members = data.company.number_members
-        // this.founded_year = data.company.founded_year
-        // this.career = data.career
-        // this.link_website = data.company.link_website
-        // this.link_facebook = data.company.link_facebook
-        // this.pageId = data.company.page_id
-        // this.logo = data.company.logo
+        this.company_id = data.company.id
+        this.company_name = data.company.company_name
+        this.manager_name = data.company.manager_name
+        this.number_members = data.company.number_members
+        this.founded_year = data.company.founded_year
+        this.career = data.career
+        this.link_website = data.company.link_website
+        this.link_facebook = data.company.link_facebook
+        this.pageId = data.company.page_id
+        this.logo = data.company.logo
         this.provinces = theProvinces
         this.careers = theCareers
         this.more = 'もっと見る'
@@ -930,12 +750,6 @@ export default {
           salary_max: data.salary_max,
           limit: 3,
         }
-        if (this.items.favorites && this.items.favorites.length !== 0) {
-          this.isFav = true
-        }
-        else {
-          this.isFav = false
-        }
         this.getProposedJobs(this.proposed)
       } else {
         this.hidePage = true
@@ -946,54 +760,6 @@ export default {
     async getProposedJobs(proposed) {
       // const { data } = await this.$repositories.jobs.getProposedJobs(proposed)
       // this.proposed_job = data
-    },
-    async postFavoriteJobs(payload) {
-      if (this.isEnableLikeOrUnlikeClick) {
-        this.isEnableLikeOrUnlikeClick = false
-        try {
-          await this.$repositories.jobs
-            .postFavoriteJobs({
-              job_id: payload,
-            })
-            .then((res) => {
-              if (res.status === 201) {
-                this.$toast.success(this.$t('general.addJobToFavoriteListSuccess'))
-                this.isFav = true
-                this.items.favorites.push(res.data)
-              } else {
-                this.$toast.error(this.$t('general.inactive'))
-              }
-              this.isEnableLikeOrUnlikeClick = true
-            })
-        } catch (e) {
-          this.errors = e.response.data.errors
-          this.isEnableLikeOrUnlikeClick = true
-        }
-        this.getProposedJobs(this.proposed)
-      }
-    },
-    async deleteFavoriteJobs(payload) {
-      if (this.isEnableLikeOrUnlikeClick) {
-        this.isEnableLikeOrUnlikeClick = false
-        try {
-          await this.$repositories.jobs
-            .deleteFavoriteJobs(payload)
-            .then((res) => {
-              if (res.status === 204) {
-                this.$toast.success(this.$t('general.removeJobFromFavoriteListSuccess'))
-                this.isFav = false
-                this.items.favorites.length = 0
-              } else {
-                this.$toast.error(this.$t('general.inactive'))
-              }
-              this.isEnableLikeOrUnlikeClick = true
-            })
-        } catch (e) {
-          this.errors = e.response.data.errors
-          this.isEnableLikeOrUnlikeClick = true
-        }
-        this.getProposedJobs(this.proposed)
-      }
     },
     ...mapActions({
       dispatchSetCareer: 'detail-job/setCareer',

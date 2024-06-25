@@ -12,6 +12,7 @@
             format="HH:mm:ss"
             :value="timeLeft"
             time-indices
+            @finish="timeUp"
           >
           </el-statistic>
           <div v-else>
@@ -35,7 +36,12 @@
         <div v-for="(question, index) in test.questions" :key="question._id" class="question" :id="`q-${question.id || question._id}`">
           <!-- Question Header -->
           <div class="question-header">
-            <span class="question-label">Câu {{ index + 1 }}:</span>
+            <span class="question-label">Câu {{ index + 1 }}:
+              <span v-if="isSubmitted">
+                <i v-if="!checkQuestion(question)" class="el-icon-close" style="color: red"></i>
+                <i v-else class="el-icon-check" style="color: green"></i>
+              </span>
+            </span>
             <!-- <el-tag :type="getLabelColor(question)">{{ getLabelTag(question) }}</el-tag> -->
           </div>
 
@@ -130,7 +136,7 @@
         return this.formatLeftTime(this.finishedAt - new Date(this.answerSheet.createdAt).valueOf());
       },
       timeLeft() {
-        return Date.now() + this.totalTime;
+        return Date.now() + this.totalTime - (Date.now() - new Date(this.answerSheet.createdAt));
       },
       topics() {
         const result = {};
@@ -241,6 +247,12 @@
         }
         return this.userChoices[question._id]?.choiceId === choiceId ? "danger" : "default";
       },
+      checkQuestion(question) {
+        if (this.key.includes(this.userChoices[question._id]?.choiceId)) {
+          return true;
+        }
+        return false;
+      },
       getTimeDifferenceFormatted(startTime, endTime) {
         const start = new Date(startTime);
         const end = new Date(endTime);
@@ -259,6 +271,10 @@
 
         return `${formattedHours} tiếng ${formattedMinutes} phút ${formattedSeconds} giây`;
       },
+      timeUp() {
+        this.submitAnswerSheet(true)
+        this.$toast.success('Time is up!');
+      }
     },
   };
 </script>

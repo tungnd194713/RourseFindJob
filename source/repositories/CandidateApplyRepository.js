@@ -25,8 +25,8 @@ export default ($axios) => ({
   checkJobEducationExisted() {
     return $axios.get(`/users/educations/check-roadmap`);
   },
-  getUserModule(courseId, moduleId) {
-    return $axios.get(`/users/educations/courses/${courseId}/modules/${moduleId}`);
+  getUserModule(roadmapId, courseId, moduleId) {
+    return $axios.get(`/users/educations/${roadmapId}/courses/${courseId}/modules/${moduleId}`);
   },
   watchedModule(roadmapId, courseId, moduleId) {
     return $axios.get(`/users/educations/${roadmapId}/courses/${courseId}/modules/${moduleId}/watched`);
@@ -40,8 +40,8 @@ export default ($axios) => ({
   addMentorRating(body) {
     return $axios.post(`/users/educations/rating-mentor`, body);
   },
-  getTestById(courseId, testId) {
-    return $axios.get(`/users/educations/courses/${courseId}/tests/${testId}`);
+  getTestById(roadmapId, courseId, testId) {
+    return $axios.get(`/users/educations/${roadmapId}/courses/${courseId}/tests/${testId}`);
   },
   getUserAnswerSheet(courseId, testId) {
     return $axios.get(`/users/educations/courses/${courseId}/tests/${testId}/sheets`);

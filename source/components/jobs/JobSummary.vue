@@ -28,24 +28,6 @@
         class="rounded-img cursor-pointer"
         @click="routeToJobDetailPage()"
       >
-      <img
-        v-if="isFavorite"
-        class="heart"
-        src="~/assets/images/users/icon_heart_active.svg"
-        alt=""
-        width="40px"
-        height="38px"
-        @click="addOrRemoveToFavoriteList"
-      >
-      <img
-        v-else
-        class="heart"
-        src="~/assets/images/users/icon_heart.svg"
-        alt=""
-        width="40px"
-        height="38px"
-        @click="addOrRemoveToFavoriteList"
-      >
     </div>
     <div class="main-content">
       <h4
@@ -63,7 +45,7 @@
 <!--        <span v-if="$i18n.locale === 'ja'">{{ job.title }}</span>-->
 <!--        <span v-if="$i18n.locale === 'vi'">{{ job.title_vi }}</span>-->
       </h4>
-      <div v-if="job.accept_education" class="d-flex mb-2">
+      <div v-if="job.educationReady" class="d-flex mb-2">
         <span style="color: #bc282d"><b>Có thể đào tạo trong {{ job.max_education_month }} tháng <span v-if="job.scholarship > 0">với học bổng {{ job.scholarship }}%</span></b></span>
       </div>
       <div class="moneys d-flex align-items-center">
@@ -138,7 +120,6 @@ export default {
       statusStayList: theStatusStay,
       formRecruitmentList: theFormRecruitment,
       status_alert: 0,
-      isFavorite: false,
       skillTag: [],
       statusStayToDisplay: [],
       homeCareers: theHomeCareers,
@@ -150,19 +131,7 @@ export default {
     ...mapGetters(['loggedInUser', 'isAuthenticated'])
   },
 
-  watch: {
-    job() {
-      if (this.job.favorites?.length > 0 && this.isAuthenticated) {
-        this.isFavorite = true
-      }
-      else {
-        this.isFavorite = false
-      }
-    }
-  },
-
   created() {
-    this.isFavorite = this.isAuthenticated && this.job.favorites?.length > 0
     this.initData()
   },
   methods: {
@@ -198,36 +167,6 @@ export default {
     routeToJobDetailPage() {
       this.$emit('routeToJobDetailPage', this.job)
     },
-
-    async addOrRemoveToFavoriteList() {
-      if (this.isAuthenticated) {
-        if (this.isEnableLikeOrUnlikeClick) {
-          this.isEnableLikeOrUnlikeClick = false
-          if (this.job.favorites?.length === 0) {
-            await this.$repositories.jobs.favoriteAJob({ job_id: this.job.id }).then(res => {
-              if (res.status === 201) {
-                this.$toast.success(this.$t('general.addJobToFavoriteListSuccess'))
-                this.isFavorite = true
-                this.$emit('addOrRemoveToFavoriteListEvent')
-              }
-              this.isEnableLikeOrUnlikeClick = true
-            })
-          } else {
-            await this.$repositories.jobs.unfavoriteAJob(this.job.favorites[0].id).then(res => {
-              if (res.status === 204) {
-                this.$toast.success(this.$t('general.removeJobFromFavoriteListSuccess'))
-                this.isFavorite = false
-                this.$emit('addOrRemoveToFavoriteListEvent')
-              }
-              this.isEnableLikeOrUnlikeClick = true
-            })
-          }
-        }
-      } else {
-        this.$emit('addOrRemoveToFavoriteListButNotLoggedIn')
-      }
-    },
-
   }
 }
 </script>

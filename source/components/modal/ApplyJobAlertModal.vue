@@ -6,6 +6,17 @@
       <div class="modal-content box-modal">
         <div class="modal-header border-0">
           <img
+            v-if="statusAlert === defaultApplyJobDoneStatus"
+            ref="closePopUpAlertBtn"
+            class="close-modal"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+            src="~/assets/images/ic_exit.svg"
+            alt=""
+            @click="$router.push('/jobs/applied')"
+          >
+          <img
+            v-else
             ref="closePopUpAlertBtn"
             class="close-modal"
             data-bs-dismiss="modal"

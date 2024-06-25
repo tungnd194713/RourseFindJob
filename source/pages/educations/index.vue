@@ -25,20 +25,6 @@
           <div class="d-md-flex">
             <div class="align-items-center job-img-contain">
               <div class="job-img mb-3 mb-md-0">
-                <!-- <img
-                  v-if="item.job.favorites.length != 0"
-                  src="../../assets/images/users/draft/red-heart.svg"
-                  alt="heart"
-                  style="z-index: 99"
-                  @click="deleteFavoriteJobs(item.job.favorites[0].id)"
-                />
-                <img
-                  v-else
-                  src="../../assets/images/users/draft/heart.svg"
-                  alt="heart"
-                  style="z-index: 99"
-                  @click="postFavoriteJobs(item.job.id)"
-                /> -->
                 <div class="tag-img">
                   Đang đào tạo
                 </div>
@@ -94,11 +80,11 @@
                     /></span>-->
                     Yêu cầu hoàn thành: {{ endDate(item.applied_date, item.jobEducation.max_education_month) }}
                   </div>
-                  <div class="d-flex align-items-center jd" style="font-size: 16px">
+                  <div v-if="item.currentLearning" class="d-flex align-items-center jd" style="font-size: 16px">
                     <span>
                       Module đang học:
                     </span>
-                    <router-link v-if="item.currentLearning" class="current-module" :to="localePath(`/educations/${item.id}/courses/${item.currentLearning.course.id}/modules/${item.currentLearning.module.id}`, $i18n.locale)">{{ item.currentLearning.module.name }} | {{ item.currentLearning.course.name }}</router-link>
+                    <router-link v-if="item.currentLearning" class="current-module" :to="localePath(`/educations/${item.id || item._id}/courses/${item.currentLearning.course.id}/modules/${item.currentLearning.module.id}`, $i18n.locale)">{{ item.currentLearning.module.name }} | {{ item.currentLearning.course.name }}</router-link>
                   </div>
                   <div class="d-flex align-items-center jd" style="font-size: 16px">
                     <span>
@@ -238,22 +224,6 @@ export default {
     //   this.pageCount = data.totalPages
 
     // },
-    async deleteFavoriteJobs(payload) {
-      try {
-        await this.$repositories.jobs
-          .deleteFavoriteJobs(payload)
-          .then((res) => {
-            if (res.status === 204) {
-              this.$toast.success(this.$t('general.removeJobFromFavoriteListSuccess'))
-            } else {
-              this.$toast.error(this.$t('general.inactive'))
-            }
-          })
-      } catch (e) {
-        this.errors = e.response.data.errors
-      }
-      this.getUserRoadmapList(this.currentPage)
-    },
     toggleTitle(hovering, dex) {
       this.$set(hovering, dex, !hovering[dex])
     },

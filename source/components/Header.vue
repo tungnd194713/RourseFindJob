@@ -6,7 +6,7 @@
         <div v-if="isAuthenticated" class="row flex-nowrap justify-content-between align-items-center">
           <div class="col-4">
             <NuxtLink class="me-lg-4" :to="localePath('/', $nuxt.$i18n.locale)">
-              <h1>TheRoute</h1>
+              <h1 style="margin-bottom: 0">TheRoute</h1>
               <!-- <img
                 src="../assets/images/logo.svg"
                 alt=""
@@ -133,10 +133,11 @@
         <div v-if="!isAuthenticated" class="row justify-content-between align-items-center">
             <div class="col-12 col-sm-4 col-lg-4 pt-1">
                 <NuxtLink class="me-lg-4" :to="localePath('/', $nuxt.$i18n.locale)">
-                    <img
-                      src="../assets/images/logo.svg"
-                      alt=""
-                    />
+                  <h1 style="margin-bottom: 0">TheRoute</h1>
+                  <!-- <img
+                    src="../assets/images/logo.svg"
+                    alt=""
+                  /> -->
                 </NuxtLink>
                 <!--<NuxtLink class="blog-header-logo text-white text-decoration-none ms-2 ms-lg-5" :to="'/jobs'">
                   {{ $t('general.listJob') }}
@@ -146,17 +147,9 @@
                 <a class="border-end text-white text-decoration-none nah" :href="url_company" target="_blank">{{ $t('general.forCompany') }}</a>
                 <NuxtLink class="border-end text-white text-decoration-none nah" :to="localePath('/login', $nuxt.$i18n.locale)">{{ $t('general.login') }}</NuxtLink>
                 <NuxtLink
-                  class="border-end text-white text-decoration-none nah"
+                  class="text-white text-decoration-none nah"
                   :to="localePath('/signup', $nuxt.$i18n.locale)"
                 >{{ $t('general.register') }}</NuxtLink>
-                <select v-model="lang" class="langChange" @change="switchLocale()">
-                  <option value="vi" :selected="lang === 'vi'">
-                    Tiếng Việt (VI)
-                  </option>
-                  <option value="ja" :selected="lang === 'ja'">
-                    日本語 (JA)
-                  </option>
-                </select>
             </div>
         </div>
       </div>
@@ -172,7 +165,7 @@
           :id="router.tab + '-tab'"
           :key="router.tab"
           class="
-            col-4
+            col-3
             justify-content-center
             align-items-center
             main-menu-items

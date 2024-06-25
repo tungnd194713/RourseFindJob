@@ -163,7 +163,7 @@ export default {
     PageView,
     ApplyJobAlertModal
   },
-  layout: 'authUnrequired',
+  layout: 'auth',
 
   data() {
     return {

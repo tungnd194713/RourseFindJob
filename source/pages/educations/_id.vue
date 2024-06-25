@@ -49,7 +49,7 @@
             </div>
 
             <div class="infor-one">
-              <div class="location">
+              <div v-if="userRoadmap.current_module" class="location">
                 Module đang học: <span class="fw-bold">{{ userRoadmap.current_module.name }} - {{ userRoadmap.current_course.title }}</span>
               </div>
             </div>
@@ -248,17 +248,17 @@
                           <li v-if="!data.is_finished" class="text-center" style="background: white" @click="openRequestMentorModal(data)">
                             + Yêu cầu mentor
                           </li>
-                          <li v-for="(content, index) in data.course.modules" :key="index" class="d-flex justify-content-between" @click="$router.push(localePath(`/educations/courses/${data.course.id || data.course._id}/modules/${content.id || content._id}`, $i18n.locale))">
+                          <li v-for="(content, index) in data.course.modules" :key="index" class="d-flex justify-content-between" @click="$router.push(localePath(`/educations/${$route.params.id}/courses/${data.course.id || data.course._id}/modules/${content.id || content._id}`, $i18n.locale))">
                             <span>{{ content.name }}</span>
                             <span>
                               <img v-if="isModuleFinish(content.id || content._id, data)" src="../../assets/images/users/draft/checked-icon.png" alt="" width="18" height="18">
                             </span>
                           </li>
-                          <li v-for="(test, index) in data.tests" :key="index" class="d-flex justify-content-between align-items-center" @click="$router.push(localePath(`/educations/courses/${data.course.id || data.course._id}/tests/${test.test.id || test.test._id}`, $i18n.locale))">
+                          <li v-for="(test, index) in data.tests" :key="index" class="d-flex justify-content-between align-items-center" @click="$router.push(localePath(`/educations/${$route.params.id}/courses/${data.course.id || data.course._id}/tests/${test.test.id || test.test._id}`, $i18n.locale))">
                             <div>
                               <div>Bài test {{ index + 1 }}: {{ test.test.name }} ({{ test.test.questions.length }} câu hỏi)</div>
                               <div v-if="test.isFinished">Hoàn thành lúc: {{ test.answerSheet.finishedAt.split('T')[0] }} {{ test.answerSheet.finishedAt.split('T')[1].substring(0, test.answerSheet.finishedAt.split('T')[1].length - 1)  }}</div>
-                              <div v-if="test.isFinished">Điểm số: {{ test.answerSheet.mark / test.answerSheet.choices.length * 100 }}% - {{ test.answerSheet.mark }} / {{ test.answerSheet.choices.length }} câu trả lời đúng</div>
+                              <div v-if="test.isFinished">Điểm số: {{ test.answerSheet.mark / test.test.questions.length * 100 }}% - {{ test.answerSheet.mark }} / {{ test.test.questions.length }} câu trả lời đúng</div>
                             </div>
                             <span>
                               <img v-if="test.isFinished" src="../../assets/images/users/draft/checked-icon.png" alt="" width="18" height="18">
@@ -481,7 +481,7 @@
                       name="drone"
                       value="0"
                     />
-                    <label for="cvInSystem">Không</label>
+                    <label for="cvInSystem">Để sau</label>
                   </div>
 
                   <div style="margin-top: 12px" class="d-flex align-items-center form-cvUpload">
@@ -1082,7 +1082,7 @@ export default {
         this.job = data.job
         this.jobEducation = data.jobEducation
         this.userRoadmap = data.userRoadmap
-        this.totalProgress = data.roadmapProgress
+        this.totalProgress = Math.round(data.roadmapProgress)
         if (this.userRoadmap) {
           if (this.userRoadmap.roadmap_milestone && this.userRoadmap.roadmap_milestone.length) {
             this.userRoadmap.roadmap_milestone.forEach((milestone) => {
@@ -1193,7 +1193,7 @@ export default {
         request_mentor: this.unlockData.request_mentor,
         mentor_data: JSON.stringify(this.unlockData.mentor_data)
       }
-      const { data } = await this.$repositories.candidatesApply.unlockCourse(this.$route.params._id, this.unlockingCourse._id || this.unlockingCourse.id, unlockParams);
+      const { data } = await this.$repositories.candidatesApply.unlockCourse(this.$route.params.id, this.unlockingCourse._id || this.unlockingCourse.id, unlockParams);
       if (data) {
         this.getDetailJob();
         this.$toast.success('Đã mở khóa khóa học ' + this.unlockingCourse.title)

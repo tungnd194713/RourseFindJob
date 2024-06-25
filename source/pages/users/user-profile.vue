@@ -42,7 +42,7 @@
               <div class="error-text">{{ profileImageErrors[0] }}</div>
             </div>
           </div>
-          <div class="cv-upload-contain">
+          <!-- <div class="cv-upload-contain">
             <div class="cv-tit">{{ $t('user_profile.upload_cv') }}</div>
             <div class="cv-input-contain">
               <div class="inner-cv">
@@ -70,7 +70,7 @@
             >
               {{ $t('user_profile.preview_cv_upload') }}
             </div>
-          </div>
+          </div> -->
         </div>
         <div class="col-md-8 col-sm-12 profile-contain">
           <!-- <div class="progress-contain">
