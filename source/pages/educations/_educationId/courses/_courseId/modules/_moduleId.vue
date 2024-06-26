@@ -390,7 +390,7 @@ export default {
           this.isModuleWatched = true;
         }
       }
-			if (data?.currentVideoTime) {
+			if ((data?.currentVideoTime && data?.currentVideoTime < this.modules.video_duration * 0.99) || (data?.currentVideoTime && !this.modules.video_duration)) {
 				this.currentVideoTime = data.currentVideoTime;
 				this.watchingDialog = true;
 			}
