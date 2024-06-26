@@ -142,6 +142,20 @@
             </div>
           </el-tab-pane>
         </el-tabs> -->
+				<el-dialog title="Tiếp tục xem video" :visible.sync="watchingDialog" width="50%">
+					<el-alert
+							title="Tiếp tục xem video"
+							type="primary"
+							:description="`Bạn đang xem video đến ${currentVideoFormattedTime}, bạn có muốn xem tiếp không?`"
+							show-icon
+							:closable="false"
+						>
+						</el-alert>
+						<span slot="footer" class="dialog-footer">
+							<el-button @click="watchingDialog = false">Xem từ đầu</el-button>
+							<el-button type="warning" @click="keepWatching">Xem tiếp</el-button>
+						</span>
+      	</el-dialog>
       </div>
     </div>
   </main>
@@ -191,12 +205,24 @@ export default {
       isModuleWatched: false,
       logId: '',
       intervalId: null,
+			currentVideoTime: 0,
+			watchingDialog: false,
     }
   },
   computed: {
     noteButton () {
       return this.notes.findIndex(item => parseInt(item.noted_video_time) === parseInt(this.player?.currentTime())) > -1 ? 'Edit note' : 'Add note';
-    }
+    },
+		currentVideoFormattedTime() {
+			const seconds = this.currentVideoTime;
+      const hours = Math.floor(seconds / 3600);
+      const minutes = Math.floor((seconds % 3600) / 60);
+      const secs = Math.round(seconds % 60);
+
+      const pad = (num) => num.toString().padStart(2, '0');
+
+			return `${pad(hours)}:${pad(minutes)}:${pad(secs)}`;
+		}
   },
   watch: {
     isStop(val) {
@@ -240,13 +266,10 @@ export default {
       // })
       let currentTime = 0;
       let markedTime = vm.videoMarker
-      this.player?.currentTime(vm.videoMarker)
 			const self = this
       this.player.on('seeking', function(){
-        if(self.player?.currentTime() > currentTime && self.player?.currentTime() > markedTime) {
-          self.player?.currentTime(currentTime);
-        }
         self.player.pause();
+        self.player.play();
       });
 
       // function updateProgress() {
@@ -300,8 +323,7 @@ export default {
 			vm.currentInterval = setInterval(() => {
 				currentTime = self.player?.currentTime();
         if (currentTime > markedTime && currentTime) {
-          self.player.markers.removeAll();
-          self.player.markers.add([{ time: currentTime, text: 'Current playing' }]);
+          // self.player.markers.add([{ time: currentTime, text: 'Current playing' }]);
           markedTime = currentTime
         }
 			}, 1000);
@@ -368,7 +390,16 @@ export default {
           this.isModuleWatched = true;
         }
       }
+			if (data?.currentVideoTime) {
+				this.currentVideoTime = data.currentVideoTime;
+				this.watchingDialog = true;
+			}
     },
+		keepWatching() {
+      this.player?.currentTime(this.currentVideoTime)
+			this.player?.play()
+			this.watchingDialog = false;
+		},
     async watchedModule() {
       const { data } = await this.$repositories.candidatesApply.watchedModule(this.$route.params.educationId, this.$route.params.courseId, this.$route.params.moduleId);
       if (data) {
