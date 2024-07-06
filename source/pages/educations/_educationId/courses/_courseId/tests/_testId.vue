@@ -3,7 +3,9 @@
     <div class="container">
       <div class="card">
         <h3 class="mb-4 pb-4" style="border-bottom: 2px solid gray">
-          {{ userRoadmap.title }} > {{ course.title }} > {{ test ? test.name : 'Test' }}
+					<router-link :to="localePath(`/educations/${userRoadmap.id || userRoadmap._id}`, $i18n.locale)">{{ userRoadmap.title }}</router-link>
+           > <router-link :to="localePath(`/educations/${userRoadmap.id || userRoadmap._id}?course=${course.id || course._id}`, $i18n.locale)"> {{ course.title }} </router-link>
+					 > {{ test ? test.name : 'Test' }}
         </h3>
         <el-container>
         <loading-screen v-if="isLoading" :loading="isLoading" />
@@ -16,6 +18,12 @@
               <div slot="header" class="header">
                 <h3>{{ test.name }}</h3>
               </div>
+							<el-alert
+								v-if="!testAvailable"
+								title="Vui lòng hoàn thành tất cả module của khóa học trước khi thực hiện bài test"
+								type="error"
+								:closable="false">
+							</el-alert>
               <el-row :gutter="20" class="body">
                 <el-col :span="24">
                   <el-descriptions title="Chi tiết bài test" column={1}>
@@ -26,14 +34,21 @@
                       {{ test.time }} phút
                     </el-descriptions-item>
                   </el-descriptions>
+									<el-alert
+										v-if="testAvailable"
+										title="Bạn chỉ có thể làm bài test 1 lần duy nhất, hãy chắc chắn đã ôn kỹ trước khi làm bài"
+										type="warning"
+										:closable="false">
+									</el-alert>
                 </el-col>
-                <el-col :span="24" class="actions">
+                <el-col v-if="testAvailable" :span="24" class="actions">
                   <el-button
                     :loading="isLoading"
-                    type="primary"
-                    @click="startTest"
-                    icon="el-icon-play"
+										:disabled="!testAvailable"
+										:type="testAvailable ? 'primary' : 'info'"
+										icon="el-icon-play"
                     class="start-button"
+                    @click="startTest"
                   >
                     Bắt đầu bài test
                   </el-button>
@@ -68,6 +83,7 @@ export default {
       userRoadmap: {},
       course: {},
       answers: [],
+			testAvailable: false,
     };
   },
   created() {
@@ -81,6 +97,7 @@ export default {
         this.test = data.test;
         this.userRoadmap = data.userRoadmap;
         this.course = data.course
+        this.testAvailable = data.testAvailable
         if (this.test.isSorted) {
           this.test.questions.sort((a, b) => a.level - b.level);
         }
@@ -160,9 +177,8 @@ export default {
   margin-top: 20px;
 }
 
-.start-button {
-  background-color: #409eff;
-  border-color: #409eff;
-  color: white;
+a {
+	color: unset !important;
+	text-decoration: unset !important;
 }
 </style>

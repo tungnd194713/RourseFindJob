@@ -151,8 +151,8 @@
                   </div> -->
                   <div class="d-flex flex-wrap align-items-center">
                     <div
-                      v-for="(skill, index) in items.previewSkills"
-                      :key="index"
+                      v-for="(skill) in items.previewSkills"
+                      :key="skill.id || skill._id"
                       class="skill skill-primary"
                     >
                       {{ skill }}
@@ -166,12 +166,12 @@
               <div class="container text-center faq-con">
                 <div
                   v-for="data in datas"
-                  :key="data.value"
+                  :key="data.course.id || data.course._id"
                   class="row m-4 question-button"
                 >
                   <div class="p-con">
                     <p>
-                      <button v-if="data.is_unlocked" class="btn btn-primary" type="button" data-bs-toggle="collapse"
+                      <button v-if="data.is_unlocked" :ref="data.course.id" class="btn btn-primary" type="button" data-bs-toggle="collapse"
                         :data-bs-target="'#' + data.class"
                         aria-expanded="false"
                         :aria-controls="data.class"
@@ -226,11 +226,11 @@
                       <div class="card card-body text-start">
                         <ul class="course-module">
                           <div v-if="data.mentor_shifts.length">
-                            <li v-for="(shift, index) in data.mentor_shifts" :key="shift.id" class="d-flex justify-content-around" style="background: white; border-bottom: 1px solid gray" @click="showMentor(shift)">
+                            <li v-for="(shift, index) in data.mentor_shifts" :key="shift.id" class="d-flex justify-content-around align-items-center" style="background: white; border-bottom: 1px solid gray; cursor: unset">
                               <div>
                                 {{ index + 1 }}
                               </div>
-                              <div>
+                              <div style="cursor: pointer; color: #2056f5;" @click="showMentor(shift)">
                                 {{ shift.mentor.mentor_name }}
                               </div>
                               <div>
@@ -242,19 +242,27 @@
                               <div style="min-width: 120px">
                                 {{ mentorShiftStatus[shift.status - 1] }}
                               </div>
+															<div>
+																<el-tooltip v-if="shift.status === 2" class="item" effect="dark" content="Kết thúc ca hỗ trợ" placement="bottom-end">
+																	<el-button type="primary" icon="el-icon-check" @click="openEndMentorDialog(false, shift)"></el-button>
+																</el-tooltip>
+                                <el-tooltip v-if="shift.status === 1" class="item" effect="dark" content="Hủy yêu cầu hỗ trợ" placement="bottom-end">
+																	<el-button type="info" icon="el-icon-close" @click="openEndMentorDialog(true, shift)"></el-button>
+																</el-tooltip>
+																<div v-else style="width: 56px"></div>
+                              </div>
                             </li>
                           </div>
-
                           <li v-if="!data.is_finished" class="text-center" style="background: white" @click="openRequestMentorModal(data)">
                             + Yêu cầu mentor
                           </li>
-                          <li v-for="(content, index) in data.course.modules" :key="index" class="d-flex justify-content-between" @click="$router.push(localePath(`/educations/${$route.params.id}/courses/${data.course.id || data.course._id}/modules/${content.id || content._id}`, $i18n.locale))">
+                          <li v-for="(content) in data.course.modules" :key="content.id || content._id" class="d-flex justify-content-between" @click="$router.push(localePath(`/educations/${$route.params.id}/courses/${data.course.id || data.course._id}/modules/${content.id || content._id}`, $i18n.locale))">
                             <span>{{ content.name }}</span>
                             <span>
                               <img v-if="isModuleFinish(content.id || content._id, data)" src="../../assets/images/users/draft/checked-icon.png" alt="" width="18" height="18">
                             </span>
                           </li>
-                          <li v-for="(test, index) in data.tests" :key="index" class="d-flex justify-content-between align-items-center" @click="$router.push(localePath(`/educations/${$route.params.id}/courses/${data.course.id || data.course._id}/tests/${test.test.id || test.test._id}`, $i18n.locale))">
+                          <li v-for="(test, index) in data.tests" :key="test.id || test._id" class="d-flex justify-content-between align-items-center" @click="$router.push(localePath(`/educations/${$route.params.id}/courses/${data.course.id || data.course._id}/tests/${test.test.id || test.test._id}`, $i18n.locale))">
                             <div>
                               <div>Bài test {{ index + 1 }}: {{ test.test.name }} ({{ test.test.questions.length }} câu hỏi)</div>
                               <div v-if="test.isFinished">Hoàn thành lúc: {{ test.answerSheet.finishedAt.split('T')[0] }} {{ test.answerSheet.finishedAt.split('T')[1].substring(0, test.answerSheet.finishedAt.split('T')[1].length - 1)  }}</div>
@@ -269,6 +277,22 @@
                     </div>
                   </div>
                 </div>
+								<el-dialog
+									class="end-shift-dialog"
+									:modal-append-to-body="true"
+									:visible.sync="endShiftDialog"
+									width="450px"
+									:title="isCancel ? 'Kết thúc hỗ trợ' : 'Hủy yêu cầu hỗ trợ'"
+								>
+									<div v-if="endShift.id || endShift._id">
+										<span v-if="isCancel">Bạn có chắc muốn hủy yêu cầu hỗ trợ vào <br> <b>{{ convertDayOfWeekEnglishToVietnamese(Object.keys(endShift.shift_days)[0]) }}</b> từ <b>{{ decimalToHourMinute(Object.values(endShift.shift_days)[0].start_hour) }}</b> đến <b>{{ decimalToHourMinute(Object.values(endShift.shift_days)[0].end_hour) }}?</b></span>
+										<span v-else>Bạn có chắc muốn kết thúc cầu hỗ trợ vào <br> <b>{{ convertDayOfWeekEnglishToVietnamese(Object.keys(endShift.shift_days)[0]) }}</b> từ <b>{{ decimalToHourMinute(Object.values(endShift.shift_days)[0].start_hour) }}</b> đến <b>{{ decimalToHourMinute(Object.values(endShift.shift_days)[0].end_hour) }}?</b></span>
+									</div>
+									<span slot="footer" class="dialog-footer">
+										<el-button type="secondary" @click="endShiftDialog = false">Hủy bỏ</el-button>
+										<el-button type="primary" @click="endShiftAction">Xác nhận</el-button>
+									</span>
+								</el-dialog>
               </div>
 
             </div>
@@ -534,7 +558,7 @@
           <h3>Tìm theo ca làm việc: </h3>
           <div class="d-flex">
             <el-select v-model="findMentorData.day" style="margin-right: 20px" placeholder="Chọn ngày trong tuần">
-              <el-option v-for="day in daysOfWeek" :key="day.value" :label="day.label" :value="day.value"> </el-option>
+              <el-option v-for="day in daysOfWeek" :key="day.value + 'day'" :label="day.label" :value="day.value"> </el-option>
             </el-select>
             <el-time-select
               v-model="findMentorData.start_hour"
@@ -557,7 +581,7 @@
               placeholder="Chọn giờ kết thúc">
             </el-time-select>
             <el-select v-model="searchStar" style="margin-right: 20px" placeholder="Chọn đánh giá tối thiểu">
-              <el-option v-for="star in [0, 1, 2, 3, 4, 5]" :key="star" :label="star + ' sao'" :value="star"> </el-option>
+              <el-option v-for="star in [0, 1, 2, 3, 4, 5]" :key="star + 'star'" :label="star + ' sao'" :value="star"> </el-option>
             </el-select>
             <el-button type="primary" @click="findMentor()">
               Tìm
@@ -582,7 +606,7 @@
                 </div>
               </template>
             </el-table-column>
-            <el-table-column prop="point_cost" label="Số khóa học đã nhận">
+            <el-table-column prop="point_cost" label="Số ca hỗ trợ đã nhận">
               <template slot-scope="scope">
                 <div>
                   {{ scope.row.shifts ? scope.row.shifts.length : 0 }}
@@ -628,7 +652,7 @@
               <el-col :span="18">
                 <div class="grid-content bg-purple">
                   <el-select v-model="mentorData.day" style="margin-right: 20px" placeholder="Chọn ngày trong tuần">
-                    <el-option v-for="day in filteredDays(Object.keys(requestingMentor.weekdays))" :key="day.value" :label="day.label" :value="day.value"> </el-option>
+                    <el-option v-for="day in filteredDays(Object.keys(requestingMentor.weekdays))" :key="day.value + 'day2'" :label="day.label" :value="day.value"> </el-option>
                   </el-select>
                 </div>
               </el-col>
@@ -754,7 +778,7 @@
           <h3>Tìm theo ca làm việc: </h3>
           <div class="d-flex">
             <el-select v-model="findMentorData.day" style="margin-right: 20px" placeholder="Chọn ngày trong tuần">
-              <el-option v-for="day in daysOfWeek" :key="day.value" :label="day.label" :value="day.value"> </el-option>
+              <el-option v-for="day in daysOfWeek" :key="day.value + 'day3'" :label="day.label" :value="day.value"> </el-option>
             </el-select>
             <el-time-select
               v-model="findMentorData.start_hour"
@@ -777,7 +801,7 @@
               placeholder="Chọn giờ kết thúc">
             </el-time-select>
             <el-select v-model="searchStar" style="margin-right: 20px" placeholder="Chọn đánh giá tối thiểu">
-              <el-option v-for="star in [0, 1, 2, 3, 4, 5]" :key="star" :label="star + ' sao'" :value="star"> </el-option>
+              <el-option v-for="star in [0, 1, 2, 3, 4, 5]" :key="star + 'star2'" :label="star + ' sao'" :value="star"> </el-option>
             </el-select>
             <el-button type="primary" @click="findMentor()">
               Tìm
@@ -802,7 +826,7 @@
                 </div>
               </template>
             </el-table-column>
-            <el-table-column prop="point_cost" label="Số khóa học đã nhận">
+            <el-table-column prop="point_cost" label="Số ca hỗ trợ đã nhận">
               <template slot-scope="scope">
                 <div>
                   {{ scope.row.shifts ? scope.row.shifts.length : 0 }}
@@ -848,7 +872,7 @@
               <el-col :span="18">
                 <div class="grid-content bg-purple">
                   <el-select v-model="mentorData.day" style="margin-right: 20px" placeholder="Chọn ngày trong tuần">
-                    <el-option v-for="day in filteredDays(Object.keys(requestingMentor.weekdays))" :key="day.value" :label="day.label" :value="day.value"> </el-option>
+                    <el-option v-for="day in filteredDays(Object.keys(requestingMentor.weekdays))" :key="day.value + 'day4'" :label="day.label" :value="day.value"> </el-option>
                   </el-select>
                 </div>
               </el-col>
@@ -1010,6 +1034,9 @@ export default {
       searchStar: '',
       requestingMentor: {},
       requestHourDialog: false,
+			endShiftDialog: false,
+			endShift: {},
+			isCancel: false,
     }
   },
 
@@ -1062,6 +1089,19 @@ export default {
   },
 
   methods: {
+		openEndMentorDialog(isCancel, shift) {
+			this.isCancel = isCancel
+			this.endShift = shift
+			this.endShiftDialog = true
+		},
+		async endShiftAction() {
+			this.endShiftDialog = false
+			const { data } = await this.$repositories.candidatesApply.endMentorShift(this.endShift.course, this.endShift._id || this.endShift.id, { status: this.isCancel ? 5 : 3 })
+			if (data) {
+        this.$toast.success(this.isCancel ? 'Đã hủy yêu cầu hỗ trợ' : 'Đã kết thúc yêu cầu hỗ trợ');
+				this.endShift = data
+			}
+		},
     userPointColor(job) {
       const point = job.user_job_point / job.job_point;
       if (point >= 0.75) {
@@ -1099,7 +1139,7 @@ export default {
             return {
               ...item,
               isShown: false,
-              class: 'about-' + index,
+              class: 'about-' + item.course._id,
             }
           })
         }
@@ -1365,7 +1405,7 @@ export default {
   p {
     margin-bottom: 0;
   }
-  button {
+  .btn {
       background-color: white !important;
       color: #00756A !important;
       font-size: 20px !important;

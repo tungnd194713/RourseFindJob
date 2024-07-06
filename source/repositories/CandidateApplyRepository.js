@@ -40,6 +40,9 @@ export default ($axios) => ({
   addMentorRating(body) {
     return $axios.post(`/users/educations/rating-mentor`, body);
   },
+	endMentorShift(courseId, shiftId, body) {
+    return $axios.put(`/users/educations/courses/${courseId}/end-shifts/${shiftId}`, body);
+  },
   getTestById(roadmapId, courseId, testId) {
     return $axios.get(`/users/educations/${roadmapId}/courses/${courseId}/tests/${testId}`);
   },
