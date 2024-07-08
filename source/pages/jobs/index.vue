@@ -123,7 +123,6 @@
 
       </div>
     </div>
-    <PageView :path-page="$nuxt.$route.path"></PageView>
 
     <button
       ref="showPopUpAlertBtn"
@@ -150,7 +149,6 @@ import theProvinces from '~/constants/provinces'
 import theStatusStay from '~/constants/statusStay'
 import theSalary from '~/constants/salaryOptions'
 import theCareers from '~/constants/careers'
-import PageView from '~/components/PageView'
 
 const NOT_LOGGED_IN = 4
 const ADD_JOB_TO_FAVORITE_LIST_BUT_NOT_LOGGED_IN = 5
@@ -160,7 +158,6 @@ export default {
   components: {
     JobSummary,
     Pagination,
-    PageView,
     ApplyJobAlertModal
   },
   layout: 'auth',
@@ -236,16 +233,29 @@ export default {
     },
 
     async getJobsListFromApi(currentPage) {
-      const condition = { ...this.condition, currentPage }
-      this.loadingJobList = true
-      const { data } = await this.$repositories.jobs.getJobsFind(condition)
-      this.loadingJobList = false
+      if (this.isAuthenticated) {
+        const condition = { ...this.condition, currentPage }
+        this.loadingJobList = true
+        const { data } = await this.$repositories.jobs.getJobsFind(condition)
+        this.loadingJobList = false
 
-      this.jobsList = data.data
-      this.totalItems = data.total
-      this.currentPage = data.current_page
-      this.perPage = data.per_page
-      this.pageCount = this.totalItems > 0 ? parseInt(data.total / data.per_page, 10) + 1 : 1
+        this.jobsList = data.data
+        this.totalItems = data.total
+        this.currentPage = data.current_page
+        this.perPage = data.per_page
+        this.pageCount = this.totalItems > 0 ? parseInt(data.total / data.per_page, 10) + 1 : 1
+      } else {
+        const condition = { ...this.condition, currentPage }
+        this.loadingJobList = true
+        const { data } = await this.$repositories.jobs.getListJobs(condition)
+        this.loadingJobList = false
+
+        this.jobsList = data.data
+        this.totalItems = data.total
+        this.currentPage = data.current_page
+        this.perPage = data.per_page
+        this.pageCount = this.totalItems > 0 ? parseInt(data.total / data.per_page, 10) + 1 : 1
+      }
     },
 
     pageChangeHandle(value) {

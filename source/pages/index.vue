@@ -239,16 +239,29 @@ export default {
     },
 
     async getJobsListFromApi(currentPage) {
-      const condition = { ...this.condition, currentPage }
-      this.loadingJobList = true
-      const { data } = await this.$repositories.jobs.getJobsFind(condition)
-      this.loadingJobList = false
+      if (this.isAuthenticated) {
+        const condition = { ...this.condition, currentPage }
+        this.loadingJobList = true
+        const { data } = await this.$repositories.jobs.getJobsFind(condition)
+        this.loadingJobList = false
 
-      this.jobsList = data.data
-      this.totalItems = data.total
-      this.currentPage = data.current_page
-      this.perPage = data.per_page
-      this.pageCount = this.totalItems > 0 ? parseInt(data.total / data.per_page, 10) + 1 : 1
+        this.jobsList = data.data
+        this.totalItems = data.total
+        this.currentPage = data.current_page
+        this.perPage = data.per_page
+        this.pageCount = this.totalItems > 0 ? parseInt(data.total / data.per_page, 10) + 1 : 1
+      } else {
+        const condition = { ...this.condition, currentPage }
+        this.loadingJobList = true
+        const { data } = await this.$repositories.jobs.getListJobs(condition)
+        this.loadingJobList = false
+
+        this.jobsList = data.data
+        this.totalItems = data.total
+        this.currentPage = data.current_page
+        this.perPage = data.per_page
+        this.pageCount = this.totalItems > 0 ? parseInt(data.total / data.per_page, 10) + 1 : 1
+      }
     },
 
     pageChangeHandle(value) {

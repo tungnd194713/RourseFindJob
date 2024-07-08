@@ -25,6 +25,9 @@ export default ($axios) => ({
   getHomeJobs() {
     return $axios.get(`/jobs/home`)
   },
+  getListJobs(data) {
+    return $axios.post(`${resource}/jobs/list?page=${data.currentPage}`, data)
+  },
   getJobsFind(data) {
     return $axios.post(`${resource}/jobs/suggest?page=${data.currentPage}`, data)
   },

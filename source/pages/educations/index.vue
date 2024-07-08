@@ -16,7 +16,7 @@
             <span class="display_all_jobs">{{ $t('general.display_all') }}</span>
           </label> -->
         </div>
-        <div v-if="items.length === 0 && hidePage" class="text-center fw-bold no-fav">{{ $t('general.not_apply_any_jobs') }}</div>
+        <div v-if="items.length === 0 && hidePage" class="text-center fw-bold no-fav">Bạn chưa tham gia chương trình đào tạo nào</div>
         <div v-for="(item, i) in items"
              :key="item.id"
              class="card-body basic px-0 item-con"

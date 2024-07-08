@@ -287,6 +287,8 @@ export default {
       const { data } = await this.$repositories.candidatesApply.refuseEducation(this.confirmRefuseId);
       if (data) {
         this.$toast.success('Đã từ chối tham gia học tập!')
+        this.warningRefuseDialog = false
+        this.getAppliedJobs(this.currentPage)
       }
     },
     pageChangeHandle(value) {
