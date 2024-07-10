@@ -75,6 +75,7 @@ export default {
     '@nuxtjs/auth',
     '@nuxtjs/moment',
     '@nuxtjs/toast',
+		"vue2-editor/nuxt",
   ],
 
   toast: {

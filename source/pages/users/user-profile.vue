@@ -668,10 +668,11 @@
             <div class="streng-info">
               <div>
                 <div class="desc fw-bold">{{ $t('user_profile.description') }}</div>
-                <textarea
+                <VueEditor
                   id="reason-desc"
                   ref="strengthInput"
                   v-model="strength"
+									:editor-toolbar="customToolbar"
                   name="strength-desc"
                   cols="30"
                   rows="5"
@@ -704,7 +705,7 @@
             <div class="reason-info">
               <div>
                 <div class="desc fw-bold">{{ $t('user_profile.description') }}</div>
-                <textarea
+                <!-- <textarea
                   id="reason-desc"
                   ref="reasonApplyInput"
                   v-model="reason_apply"
@@ -714,7 +715,18 @@
                   @blur="$v.reason_apply.$touch()"
                   @input="$v.reason_apply.$touch()"
                   @change="$v.reason_apply.$touch()"
-                />
+                /> -->
+								<VueEditor 
+									id="reason-desc"
+                  ref="reasonApplyInput"
+                  v-model="reason_apply"
+									:editor-toolbar="customToolbar"
+                  name="reason-desc"
+                  cols="30"
+                  rows="5"
+									@blur="$v.reason_apply.$touch()"
+                  @input="$v.reason_apply.$touch()"
+                  @change="$v.reason_apply.$touch()"/>
                 <div v-if="reason_apply.length < 5000" class="count">
                   {{ $t('general.characters_left_part_1') }}{{ 5000 - reason_apply.length }}{{ $t('general.characters_left_part_2') }}
                 </div>
@@ -730,12 +742,12 @@
             </div>
           </form>
           <div class="submit-contain last">
-            <button
+            <!-- <button
               class="cancel"
               @click="previewCvInSite()"
             >
               {{ $t('general.preview') }}
-            </button>
+            </button> -->
             <button
               ref="showCvUserModalBtn"
               class="d-none"
@@ -867,6 +879,16 @@ export default {
 
   data() {
     return {
+			customToolbar: [
+				[{ 'size': ['small', false, 'large', 'huge'] }],
+				['bold', 'italic', 'underline', 'strike'],
+				[{'align': ''}, {'align': 'center'}, {'align': 'right'}, {'align': 'justify'}],
+				['blockquote', 'code-block'],
+				[{ 'list': 'ordered'}, { 'list': 'bullet' }, { 'list': 'check' }],
+				[{ 'indent': '-1'}, { 'indent': '+1' }],
+				[{ 'color': [] }, { 'background': [] }],
+				[{ 'direction': 'rtl' }],
+			],
       skillArr: [],
       skillForm: {
         skill: '',
