@@ -190,16 +190,7 @@
               }
             }).then((res) => {
               if (res.status === 200) {
-                if (!this.$route.query.return_to) {
-                  this.$router.push(this.localePath('/', this.$i18n.locale))
-                }
-                if (this.$route.query.return_to === '/' || this.$route.query.return_to === '/ja') {
-                  this.$router.push(this.localePath('/', this.$i18n.locale))
-                }
-
-                if (this.$route.query.return_to) {
-                  this.$router.push(`${this.$route.query.return_to}`)
-                }
+                this.$router.push('/jobs')
               }
               const data = this.$handleResponse(res);
               this.errors = data.errors;

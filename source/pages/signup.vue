@@ -172,9 +172,9 @@ export default {
     },
 
   created() {
-      // if (this.isAuthenticated) {
-      //   this.$router.push('/')
-      // }
+      if (this.isAuthenticated) {
+        this.$router.push('/')
+      }
     if (this.$nuxt?.context?.from?.path) localStorage.setItem('previousPath', this.$nuxt.context.from.path)
   },
 
@@ -187,12 +187,13 @@ export default {
           try {
             await this.$repositories.accounts.signUp(this.user)
             .then((res) => {
-                if (res.status === 200) {
-                  this.$toast.success(this.$t('signup_page.success'))
+                if (res.status === 201) {
+                  this.$toast.success('Đăng ký thành công, hãy đăng nhập!')
                   this.user = {}
                   this.acceptTerms = 0
                   this.$v.user.$reset()
                   this.$v.acceptTerms.$reset()
+                  this.$router.push('/login')
                 }
                 else {
                   this.errorShow = true
