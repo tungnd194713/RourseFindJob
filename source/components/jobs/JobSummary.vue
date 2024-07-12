@@ -1,5 +1,5 @@
 <template>
-  <div v-if="$moment().isSameOrBefore(job.date_end, 'day')" class="box-content">
+  <div class="box-content">
     <div class="image-content">
       <img
         v-if="job.image_job"

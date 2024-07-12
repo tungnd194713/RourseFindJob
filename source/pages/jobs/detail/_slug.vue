@@ -155,7 +155,7 @@
                              :is-expired="items.date_end" :job-status="items.status" :check-apply="checkApply"
                              :accept-education="items.accept_education" :matching-point="Math.round(items.user_job_point / items.job_point * 100) / 100 * 100"
                              :education-courses="datas.map((item) => item._id || item.id)" :is-applied="items.isApplied" :education-ready="items.educationReady"
-                             @applySuccess="handleApplySuccessEvent()" />
+                             :user-job-point="userJobPoint" @applySuccess="handleApplySuccessEvent()" />
                   <div v-if="items.educationReady" class="d-flex mb-2">
                     <span style="color: #bc282d"><b>Có thể đào tạo trong {{ items.max_education_month }} tháng <span v-if="items.scholarship > 0">với học bổng {{ items.scholarship }}%</span></b></span>
                   </div>

@@ -252,6 +252,7 @@ export default {
     }
     this.player = videojs(this.$refs.videoPlayer, this.videoOptions, () => {
       this.player.log('onPlayerReady', this);
+      this.player.pause();
 
       // this.player.markers({
       //   markers: [

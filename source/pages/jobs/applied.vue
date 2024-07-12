@@ -270,6 +270,8 @@ export default {
       const { data } = await this.$repositories.candidatesApply.checkJobEducationExisted();
       if (data) {
         this.warningDialog = true
+      } else {
+        this.confirmAction()
       }
     },
     async confirmAction() {

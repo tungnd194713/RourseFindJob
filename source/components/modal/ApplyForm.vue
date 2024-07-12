@@ -1,7 +1,14 @@
 <template>
   <main>
     <button
-      v-if="isApplied === false && $moment().isSameOrBefore(isExpired, 'day') && jobStatus === JOB_STATUS_SHOW"
+      v-if="userJobPoint === null"
+      class="applied-button"
+      disabled
+    >
+      Chưa tạo profile
+    </button>
+    <button
+      v-else-if="isApplied === false && $moment().isSameOrBefore(isExpired, 'day') && jobStatus === JOB_STATUS_SHOW"
       class="recruitment"
       data-bs-toggle="modal"
       data-bs-target="#applyForm"
@@ -220,6 +227,10 @@ export default {
       type: Boolean,
       default: false,
     },
+    userJobPoint: {
+      type: Number,
+      default: null,
+    },
   },
 
   data() {
@@ -268,7 +279,7 @@ export default {
 
   created() {
     // this.checkApplied()
-    // this.getUserProfile()
+    this.getUserProfile()
   },
 
   methods: {
